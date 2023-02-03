@@ -1,0 +1,18 @@
+﻿@model MonksInn.Web.Models.Checkout.PaymentViewModel
+@{
+    ViewData["Title"] = "Receive Payment";
+}
+
+<div class="pb-4 dark-container">
+    <div class="container-fluid mt-3">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Receive Payment</h2>
+
+            </div>
+            <div class="card-body">
+                <a href="@Url.Action("PaymentReceived", new { id= Model.Order.Id })" class="btn btn-primary">Receive Payment</a>
+            </div>
+        </div>
+    </div>
+</div>

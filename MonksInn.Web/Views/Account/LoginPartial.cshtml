@@ -1,0 +1,68 @@
+﻿@model MonksInn.Web.Models.Account.LoginViewModel
+
+
+<div class="modal-header">
+    <h5 class="modal-title">Log in</h5>
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true" class="fa fa-times-circle"></span>
+    </button>
+</div>
+<div class="modal-body">
+
+
+    <form>
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        @if (Model?.ForceSendNewLinkSuccess == true)
+        {
+            <div class="alert alert-success">An email confirmation link has been sent to you.</div>
+        }
+        <div class="form-group">
+            <label asp-for="Username" class="control-label"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ClearPassword" class="control-label"></label>
+            <input asp-for="ClearPassword" type="password" class="form-control" />
+            <span asp-validation-for="ClearPassword" class="text-danger"></span>
+            <div><a class="hover-pointer" onclick="ForgottenPasswordModal.open()">Forgot your password?</a></div>
+        </div>
+
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="RememberMe" value="true"/> @Html.DisplayNameFor(model => model.RememberMe)
+            </label>
+        </div>
+
+        <div>
+
+            @if (Model?.ForceSendNewLinkSuccess == true)
+            {
+                <button type="submit" class="btn btn-primary  btn-block">Login</button>
+            }
+            else if (Model?.ShowSendNewLinkButton == true)
+            {
+                <input asp-for="ForceSendNewLink" type="hidden" value="true" />
+
+                <button type="submit" class="btn btn-primary  btn-block">Send new email confirmation link</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary  btn-block">Login</button>
+
+            }
+            <h5 class="text-center mt-3 mb-2">OR</h5>
+            <a onclick="RegisterModal.open()" class="btn btn-secondary btn-block">Register new account?</a>
+        </div>
+    </form>
+</div>
+
+
+@if (Model?.LoginSuccessful == true)
+{
+    <script>
+        location.reload();
+    </script>
+}

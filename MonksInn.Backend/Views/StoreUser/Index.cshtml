@@ -1,0 +1,61 @@
+﻿@model MonksInn.Backend.Models.StoreUser.IndexViewModel
+@{
+    ViewData["Title"] = "Store Users";
+    ViewData["ActiveNav"] = "Store Users";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanAddUpdateStoreUser))
+        {
+            <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Add")">Add User</a>
+        }
+    </div>
+
+</div>
+
+<div class="table-responsive" >
+    <table class="table table-sm table-hover" id="StoreUsersTable">
+        <thead>
+            <tr>
+                <th class="">Name</th>
+                <th class="">Email</th>
+                <th class="">Type</th>
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.EmailAddress</td>
+                    <td>@(item.IsWholeSaleUser ? "Wholesale User" : "Retail User")</td>
+                    <td class="text-right pinch ignorefilter">
+                        @if (User.HasAccess(SystemPermission.CanAddUpdateStoreUser))
+                        {
+                            <a class="btn btn-xs btn-outline-primary" href="@Url.Action("Update", new { id= item.Id })">Update</a>
+                        }
+                        @if (User.HasAccess(SystemPermission.CanArchiveStoreUser))
+                        {
+                            <a class="btn btn-xs btn-outline-danger" href="#" onclick="ConfirmDelete('@Url.Action("Archive", new { id = item.Id })', '@item.Name')">Archive</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+        InitFilterTable("#Search", "#StoreUsersTable tbody");
+    </script>
+}

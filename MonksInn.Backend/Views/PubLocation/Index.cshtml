@@ -1,0 +1,65 @@
+﻿@model MonksInn.Backend.Models.PubLocation.PubLocationViewModel
+@{
+    ViewData["Title"] = "Pub Locations";
+    ViewData["ActiveNav"] = "Pub Locations";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanAddUpdatePubLocation))
+        {
+            <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Add", "PubLocation")">Add Location</a>
+        }
+    </div>
+
+</div>
+
+<div class="table-responsive" >
+    <table class="table table-sm table-hover" id="PubLocationTable">
+        <thead>
+            <tr>
+                <th class="">Name</th>
+                <th class="">Address</th>
+                <th class="">Delivery/Takeaway</th>
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PubLocations)
+            {
+
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Address</td>
+                    <td>@(item.GetLocationStatus())</td>
+                    <td class="text-right pinch ignorefilter">
+                        @if (User.HasAccess(SystemPermission.CanAddUpdatePubLocation))
+                        {
+                            <a class="btn btn-xs btn-outline-primary" href="@Url.Action("Update", new { id= item.Id })">Update</a>
+                        }
+                        @if (User.HasAccess(SystemPermission.CanArchivePubLocation))
+                        {
+                            <a class="btn btn-xs btn-outline-danger" href="#" onclick="ConfirmDelete('@Url.Action("Archive", "PubLocation", new { id = item.Id })', '@item.Name')">Archive</a>
+                        }
+                        </td>
+                    @*<td class="text-center"></td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        InitFilterTable("#Search", "#PubLocationTable tbody");
+
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@model MonksInn.Backend.Models.Tap.TapViewModel
+@{
+    ViewData["Title"] = "Tapped Stock";
+    ViewData["ActiveNav"] = "Tapped Stock";
+}
+
+
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="SearchStock" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+    </div>
+
+</div>
+<div class="table-responsive" id="TapTablePartial">
+    <partial name="TapTablePartial" model="@Model" />
+</div>
+
+
+@section Scripts{
+
+
+    <script>
+        var tablepartialurl = "@Url.Action("TapTablePartial", "Tap")";
+
+        function RefreshTable() {
+            PageSpinner.toggle(true);
+            $('[data-toggle="tooltip"]').tooltip('dispose');
+            $.get(tablepartialurl, function (data) {
+                $("#TapTablePartial").html(data);
+                InitFilterTable("#SearchStock", "#TapTablePartial tbody");
+                PageSpinner.toggle(false);
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
+        }
+
+        $(document).ready(function () {
+            InitFilterTable("#SearchStock", "#TapTablePartial tbody");
+
+            $(".modal").on('hidden.bs.modal', function () {
+                RefreshTable();
+            });
+        });
+    </script>
+
+    @if (User.HasAccess(SystemPermission.CanUpdateTappedStock))
+    {
+
+        <div class="modal" id="UpdateStockModal" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Stock</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true" class="fa fa-times-circle"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="UpdateStockModalContent">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        var UpdateStockurl = "@Url.Action("UpdateStockPartial", "Tap")";
+        function ShowUpdateStockModal(id) {
+            PageSpinner.toggle(true);
+            $("#UpdateStockModalContent").load(`${UpdateStockurl}/${id}`, function (data) {
+                $("#UpdateStockModal").modal("show");
+                PageSpinner.toggle(false);
+            });
+        }
+        function SubmitUpdateStock(e) {
+            e.preventDefault();
+
+            PageSpinner.toggle(true);
+            var formData = $("#UpdateStockModalContent form").serializeArray();
+
+            $.ajax({
+                url: UpdateStockurl,
+                method: 'post',
+                data: formData,
+                complete: function (data) {
+                    $("#UpdateStockModalContent").html(data.responseText);
+                    PageSpinner.toggle(false);
+                }
+            });
+            return false;
+        }
+        </script>
+    }
+}  

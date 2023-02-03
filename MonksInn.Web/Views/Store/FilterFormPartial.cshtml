@@ -1,0 +1,101 @@
+﻿@model MonksInn.Web.Models.Store.FilterViewModel
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal-header">
+    <h2>Filter</h2>
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true" class="fa fa-times-circle"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <form>
+
+        <div class="form-group">
+            <label asp-for="Search" class="control-label"></label>
+            <input type="text" asp-for="Search" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Breweries" class="control-label"></label>
+            @foreach (var item in Model.BreweryList)
+            {
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="Breweries" @(Model.Breweries.Contains(item) ? "checked" : "") type="checkbox" value="@item" /> @item
+                    </label>
+                </div>
+            }
+        </div>
+        @if (Model.IsWholeSaleUser)
+        {
+            <div class="form-group">
+                <label asp-for="UnitSizes" class="control-label"></label>
+                @foreach (var item in Model.UnitSizeList)
+                {
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" name="UnitSizes" @(Model.UnitSizes.Contains(item) ? "checked" : "") type="checkbox" value="@item" /> @item
+                        </label>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="Locations" class="control-label"></label>
+                @foreach (var item in Model.LocationList)
+                {
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" name="Locations" @(Model.Locations.Contains(item) ? "checked" : "") type="checkbox" value="@item" /> @item
+                        </label>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Availability" class="control-label"></label>
+                @foreach (var item in Model.AvailabilityList)
+                {
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" name="Availability" @(Model.Availability.Contains(item) ? "checked" : "") type="checkbox" value="@item" /> @item
+                        </label>
+                    </div>
+                }
+            </div>
+        }
+        <div class="form-group">
+            <label asp-for="BeerTypes" class="control-label"></label>
+            @foreach (var item in Model.BeerTypeList)
+            {
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="BeerTypes" @(Model.BeerTypes.Contains(item) ? "checked" : "") type="checkbox" value="@item" /> @item
+                    </label>
+                </div>
+            }
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Subtypes" class="control-label"></label>
+            @foreach (var item in Model.SubtypeList)
+            {
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="Subtypes" @(Model.Subtypes.Contains(item) ? "checked" : "") type="checkbox" value="@item" /> @item
+                    </label>
+                </div>
+            }
+        </div>
+
+
+        <div class="text-right">
+            <button type="button" onclick="StoreLogic.SubmitFitler()" class="btn btn-primary">Apply</button>
+            <button type="button" onclick="StoreLogic.ClearFitler()" class="btn btn-secondary">Clear</button>
+        </div>
+    </form>
+</div>

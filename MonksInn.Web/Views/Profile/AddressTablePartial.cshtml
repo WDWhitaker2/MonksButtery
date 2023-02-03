@@ -1,0 +1,25 @@
+﻿@model List<MonksInn.Domain.StoreUserAddress>
+
+
+<table class="table table-striped table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Address</th>
+            <th class="pinch p-1 va-m text-center"><button onclick="AddAddressModal.open()" title="Add Address" class="btn btn-outline-primary btn-sm ">Add</button>  </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            
+
+            <tr>
+                <td>@item.ToAddressString()</td>
+                <td class="pinch p-1 va-m text-center">
+                    <button onclick="DeleteAddressModal.open({ getParameters: {id:'@(item.Id)'}})" title="Remove Address" class="btn btn-outline-danger btn-sm ">Delete</button>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

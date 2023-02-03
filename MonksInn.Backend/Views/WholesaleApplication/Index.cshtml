@@ -1,0 +1,54 @@
+﻿@model MonksInn.Backend.Models.WholesaleApplication.IndexViewModel
+@{
+    ViewData["Title"] = "Wholesale Application";
+    ViewData["ActiveNav"] = "Wholesale Application";
+}
+
+
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover" id="WholesaleApplicationTable">
+        <thead>
+            <tr>
+                <th class="">Date Requested</th>
+                <th class="">User</th>
+                <th class="">Status</th>
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Applications)
+            {
+            <tr>
+                <td>@item.DateCreated.ToString("dd MMM yyyy HH:mm")</td>
+                <td>@item.StoreUser.Name</td>
+                <td><div class="alert p-1 d-inline-block @(item.Result == WholesaleApplicationResult.Rejected ? "alert-danger" : item.Result == WholesaleApplicationResult.Accepted ? "alert-success" :  "alert-info")">@item.Result.ToString()</div></td>
+                <td class="text-right pinch ignorefilter">
+                    @if (User.HasAccess(SystemPermission.CanActionWholesaleApplication))
+                    {
+                        <a class="btn btn-xs btn-outline-primary" href="@Url.Action("ViewApplication", "WholesaleApplication", new { id = item.Id })">View</a>
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        InitFilterTable("#Search", "#WholesaleApplicationTable tbody");
+    </script>
+
+}

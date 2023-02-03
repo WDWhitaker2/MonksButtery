@@ -1,0 +1,53 @@
+﻿@model MonksInn.Backend.Models.StockOrder.StockOrdersViewModel
+@using MonksInn.Logic.Extensions
+
+
+<table class="table table-sm table-hover" id="StockOrderTable">
+    <thead>
+        <tr>
+            <th>ETA</th>
+            <th>Beer</th>
+            <th>Type</th>
+            <th>Units</th>
+            <th class="text-center pinch">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.StockOrders)
+        {
+            var tablerowcolor = "";
+            if (item.ETA.Date == DateTime.Now.Date)
+            {
+                tablerowcolor = "table-info";
+            }
+            if (item.ETA.Date < DateTime.Now.Date)
+            {
+                tablerowcolor = "table-warning";
+            }
+            if (item.ValidationErrors().Any())
+            {
+                tablerowcolor = "table-danger";
+            }
+
+            <tr class="@tablerowcolor" data-toggle="tooltip" data-html="true" data-title="@(string.Join("<br/>", item.ValidationErrors()))">
+                <td>@item.ETA.ToString("dd MMM yyyy") </td>
+                <td>@item.Beer.BreweryName - @item.Beer.BeerName</td>
+                <td>@(item.Beer.BeerType.GetDisplayName()) - @item.Beer.SubType</td>
+
+                <td>@item.UnitSize x @item.Units</td>
+                <td class="text-right pinch ignorefilter">
+                    @if (User.HasAccess(SystemPermission.CanRecieveStock))
+                        @if (!item.ReceivedDate.HasValue)
+                        {
+                            <button type="button" class="btn btn-xs btn-outline-primary" onclick="ShowReceiveStockModal('@item.Id')">Receive</button>
+                        }
+                        @if (User.HasAccess(SystemPermission.CanArchiveStockOrder))
+                        {
+                            <button class="btn btn-xs btn-outline-danger" onclick="ConfirmDelete('@Url.Action("Archive", "StockOrder", new { id = item.Id })', '@item.UnitSize x @item.Units of  @item.Beer.BeerName by @item.Beer.BreweryName for the @item.ETA.ToString("dd MMM yyyy")')">Archive</button>
+                        }
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+

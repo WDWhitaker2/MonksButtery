@@ -1,0 +1,29 @@
+﻿@model MonksInn.Web.Models.Checkout.CheckoutIndexViewModel
+
+
+<div class="form-group">
+
+    <label>Select an address or add a new address</label>
+    <select class="form-control mb-1" asp-for="SelectedAddress">
+        <option></option>
+        @foreach (var item in Model.Addresses)
+        {
+            <option value="@item.Id">@item.ToAddressString()</option>
+        }
+    </select>
+    <button type="button" onclick="AddAddressModal.open()" class="btn btn-outline-primary btn-block btn-sm ">Add New Address</button>
+    <span asp-validation-for="SelectedAddress" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+
+    <label>Select a delivery slot</label>
+    <select class="form-control mb-1" asp-for="SelectedDeliveryDateAllocation">
+        <option></option>
+        @foreach (var item in Model.DeliverySlots)
+        {
+            <option value="@item.Id">@item.ToDisplayString()</option>
+        }
+    </select>
+    <span asp-validation-for="SelectedDeliveryDateAllocation" class="text-danger"></span>
+</div>

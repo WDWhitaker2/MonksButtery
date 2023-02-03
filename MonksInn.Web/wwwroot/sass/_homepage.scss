@@ -1,0 +1,32 @@
+﻿.fullviewheight {
+    height: 100vh;
+}
+
+.greyscale-100 {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+
+/* This works in Chrome 73, but NOT FOR LONG. */
+body {
+    scroll-padding-top: 94px; /* height of sticky header */
+}
+
+/* Ultimately, this is the correct place for scroll-padding */
+html {
+    scroll-padding-top: 94px; /* height of sticky header */
+}
+
+.pub-btn {
+    font-weight: 600;
+    font-size: 2rem !important;
+}
+
+.contactusimages img {
+    width: 100%;
+    height: auto;
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+    padding: 0.5rem !important;
+}
+

@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monks Inn @(string.IsNullOrWhiteSpace(ViewData["Title"] as string) ? "" : $"| {ViewData["Title"]}")</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=eEYKq0MYk5">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=eEYKq0MYk5">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=eEYKq0MYk5">
+    @*<link rel="manifest" href="/favicon/site.webmanifest?v=eEYKq0MYk5">*@
+    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=eEYKq0MYk5" color="#333333">
+    <link rel="shortcut icon" href="/favicon/favicon.ico?v=eEYKq0MYk5">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/favicon/browserconfig.xml?v=eEYKq0MYk5">
+    <meta name="theme-color" content="#ffffff">
+
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/material-icons/css/material-icons.css" rel="stylesheet" />
+    <link href="~/lib/slick-carousel/slick.css" rel="stylesheet" />
+    <link href="~/lib/slick-carousel/slick-theme.css" rel="stylesheet" />
+    <link href="~/sass/site.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="full-page-spinner"><span class="spinner-border" style="width: 3rem; height: 3rem;"></span></div>
+    <div class="alert-container"></div>
+    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+        <a class="navbar-brand has-logo" href="@Url.Action("index", "Home")"><img class="navbar-brand-logo" src="/images/monks-logo-black.png" /> Monks Inn</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="navbar-nav ml-auto">
+                <a href="@Url.Action("","Store")" class="nav-link active">Store</a>
+                <a href="/Home/Index#AboutUs" class="nav-link active">About Us</a>
+                <a href="/Home/Index#ContactUs" class="nav-link active">Contact Us</a>
+                @if (User.IsAuthenticated())
+                {
+                    <a class="nav-link active" href="/Profile">Account</a>
+                    <a class="nav-link active" href="/Account/Logout">Log out</a>
+                }
+                else
+                {
+                    if (ViewBag.PrivacyCookieValue != true)
+                    {
+                        <a class="nav-link active hover-pointer" onclick="privacyModal.open()">Log in</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link active hover-pointer" onclick="LoginModal.open()">Log in</a>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+
+    <div class="bodycontent">
+            @RenderBody()
+        <div class="bodyfooter bg-dark">
+
+            <div class="container-fluid text-light">
+                <div class="row align-items-center">
+                    <div class="col pt-2 pb-2">
+                        <div class="text-light text-center text-sm-left ">
+                            <a target="_blank" href="https://www.facebook.com/pages/category/Pub/Monks-Inn-2064181233798241/"><span class="fa fa-3x fa-facebook-square"></span></a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-10 pt-2 pb-2">
+                        <div class="text-light text-center text-sm-right ">
+                            <a onclick="privacyModal.open()">Cookie Policy</a>
+                            <a href="/Home/Legal#PrivacyPolicy">Privacy Policy</a>
+                            <a href="/Home/Legal#TermsAndConditions">Terms and Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="LoginModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="RegisterModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="PasswordForgetModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    @if ((ViewBag.EnableClientSideValidation as bool?).GetValueOrDefault(true))
+    {
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    }
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    @if (TempData["Alerts"] != null)
+    {
+
+        @foreach (var item in Newtonsoft.Json.JsonConvert.DeserializeObject<List<Alert>>(TempData["Alerts"].ToString()))
+        {
+            <script>AddAlert("@item.Message", "@item.Type");</script>
+        }
+    }
+    @if ((bool?)TempData["ForceOpenLoginModal"] == true)
+    {
+        <script>LoginModal.open();</script>
+    }
+
+    <div class="modal" id="privacyModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    <script>
+        var privacyModal = InitAjaxModal("#privacyModal",  "@Url.Action("PrivacyFormPartial","Profile")")
+    </script>
+    @if (ViewBag.PrivacyCookieValue == null)
+    {
+        <script>
+            privacyModal.open();
+        </script>
+    }
+
+
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

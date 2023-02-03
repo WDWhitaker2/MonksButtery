@@ -1,0 +1,103 @@
+﻿$sidebar-width: 250px;
+$sidebar-padding-top: 86px;
+$sidebar-horizontal-base-padding: 30px;
+$sidebar-vertical-base-padding: 15px;
+$sidebar-breakpoint: 1024px;
+
+.sidebar {
+    height: calc(100vh - #{$sidebar-padding-top});
+    width: $sidebar-width;
+    margin-top: $sidebar-padding-top;
+    position: fixed;
+    overflow-y: auto;
+
+    .sidebar-header {
+        display: block;
+        padding-top: $sidebar-vertical-base-padding * 2;
+        padding-bottom: $sidebar-vertical-base-padding / 3;
+        color: $gray-500;
+        padding-left: $sidebar-horizontal-base-padding;
+        padding-right: $sidebar-horizontal-base-padding;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .sidebar-list {
+        list-style: none;
+        padding: 0px;
+        color: white;
+
+        .sidebar-list-item {
+
+            a {
+                display: block;
+                padding-top: $sidebar-vertical-base-padding;
+                padding-bottom: $sidebar-vertical-base-padding;
+                /*color: white;*/
+                padding-left: $sidebar-horizontal-base-padding;
+                padding-right: $sidebar-horizontal-base-padding;
+                color: white;
+
+                &:hover {
+                    text-decoration: none;
+                }
+
+                &[href]:hover {
+                    background-color: $gray-700;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+
+                &.active {
+                    color: $yellow;
+                }
+            }
+        }
+
+        .sidebar-list-item .sidebar-list .sidebar-list-item a {
+            padding-left: $sidebar-horizontal-base-padding * 2;
+        }
+
+        .sidebar-list-item .sidebar-list .sidebar-list-item .sidebar-list .sidebar-list-item a {
+            padding-left: $sidebar-horizontal-base-padding * 3;
+        }
+    }
+}
+
+.sidebar ~ .content {
+    padding-left: $sidebar-width;
+    padding-top: $sidebar-padding-top;
+}
+
+
+.btn-burger{
+    display:none;
+}
+
+@media (max-width: $sidebar-breakpoint) {
+
+    .btn-burger {
+        display: block;
+    }
+
+    .sidebar {
+        width: 0px;
+        position: absolute;
+        z-index: 1020;
+        transition: width linear 0.1s;
+        overflow: auto;
+        white-space: nowrap;
+        height: initial;
+
+        &.open {
+            width: 100%
+        }
+    }
+
+    .sidebar ~ .content {
+        padding-left: 0px;
+        padding-top: $sidebar-padding-top;
+    }
+}

@@ -1,0 +1,133 @@
+﻿@model MonksInn.Backend.Models.SystemSettings.SystemSettingsViewModel
+
+@{
+    ViewData["Title"] = $"System Settings";
+    ViewData["ActiveNav"] = "System Settings";
+}
+
+<form action="@Url.Action()" method="post">
+    <div class="row">
+        <div class="col-lg-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+            <h5>Email Settings</h5>
+
+            <div class="form-group">
+                <label asp-for="SmtpServer" class="control-label"></label>
+                <input type="text" asp-for="SmtpServer" class="form-control" />
+                <span asp-validation-for="SmtpServer" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SmtpUseSsl" class="control-label"></label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="SmtpUseSsl" type="radio" value="true" /> Yes
+                    </label>
+                </div>
+                <div class=" form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="SmtpUseSsl" type="radio" value="false" /> No
+                    </label>
+                </div>
+
+                <span asp-validation-for="SmtpUseSsl" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SmtpPort" class="control-label"></label>
+                <input type="number" asp-for="SmtpPort" class="form-control" />
+                <span asp-validation-for="SmtpPort" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SmtpUsername" class="control-label"></label>
+                <input type="text" asp-for="SmtpUsername" class="form-control" />
+                <span asp-validation-for="SmtpUsername" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SmtpPassword" class="control-label"></label>
+                <input type="text" asp-for="SmtpPassword" class="form-control" />
+                <span asp-validation-for="SmtpPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DefaultFromEmail" class="control-label"></label>
+                <input type="text" asp-for="DefaultFromEmail" class="form-control" />
+                <span asp-validation-for="DefaultFromEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailTemplateBaseWebUrl" class="control-label"></label>
+                <input type="text" asp-for="EmailTemplateBaseWebUrl" class="form-control" />
+                <span asp-validation-for="EmailTemplateBaseWebUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailTemplateBaseBackendUrl" class="control-label"></label>
+                <input type="text" asp-for="EmailTemplateBaseBackendUrl" class="form-control" />
+                <span asp-validation-for="EmailTemplateBaseBackendUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactUsRecipientEmail" class="control-label"></label>
+                <input type="text" asp-for="ContactUsRecipientEmail" class="form-control" />
+                <span asp-validation-for="ContactUsRecipientEmail" class="text-danger"></span>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <h5>Web Store Settings</h5>
+    <div class="row">
+        <div class="col-lg-10">
+
+            <div class="form-group">
+                <label asp-for="TermsAndConditions" class="control-label"></label>
+                <textarea asp-for="TermsAndConditions" class="form-control"></textarea>
+                <span asp-validation-for="TermsAndConditions" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PrivacyPolicy" class="control-label"></label>
+                <textarea asp-for="PrivacyPolicy" class="form-control"></textarea>
+                <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CookiePolicy" class="control-label"></label>
+                <textarea asp-for="CookiePolicy" class="form-control"></textarea>
+                <span asp-validation-for="CookiePolicy" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-right">
+                <input type="submit" value="Update" class="btn btn-sm btn-outline-primary" />
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section scripts{
+    <script src="~/lib/ckeditor5/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#PrivacyPolicy'))
+            .catch(error => {
+                console.error(error);
+            });
+        ClassicEditor
+            .create(document.querySelector('#TermsAndConditions'))
+            .catch(error => {
+                console.error(error);
+            });
+        ClassicEditor
+            .create(document.querySelector('#CookiePolicy'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}

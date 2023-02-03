@@ -1,0 +1,72 @@
+﻿@model MonksInn.Backend.Models.Tap.UpdateStockPartialViewModel
+
+<form onsubmit="SubmitUpdateStock(event)">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="Id" type="hidden" class="form-control" />
+
+    <div class="form-group">
+        <label asp-for="Beer" class="control-label"></label>
+        <input asp-for="Beer" class="form-control" readonly />
+        <span asp-validation-for="Beer" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TapType" class="control-label"></label>
+        <select asp-for="TapType" class="form-control">
+            <option></option>
+            @foreach (var item in Model.TapTypeList)
+            {
+                <option>@item</option>
+            }
+        </select>
+        <span asp-validation-for="TapType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RetailPrice" class="control-label"></label>
+        <input asp-for="RetailPrice" type="number" min="0" step="0.01" class="form-control" />
+        <span asp-validation-for="RetailPrice" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PubLocationId" class="control-label"></label>
+        <select asp-for="PubLocationId" class="form-control">
+            <option></option>
+            @foreach (var item in Model.PubLocationList)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+        <span asp-validation-for="PubLocationId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="ForDelivery" /> @Html.DisplayNameFor(model => model.ForDelivery)
+        </label>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="ForTakeaway" /> @Html.DisplayNameFor(model => model.ForTakeaway)
+        </label>
+    </div>
+
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+        <button type="button" data-dismiss="modal" class="btn btn-sm btn-outline-primary">Close</button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#TapType").select2({
+        });
+    });
+</script>
+
+@if (Model.ForceCloseModal)
+{
+    <script>
+        $(".modal").modal("hide");
+    </script>
+}

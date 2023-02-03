@@ -1,0 +1,21 @@
+﻿@model MonksInn.RazorEmailTemplateService.Models.WholesaleApplicationResponseModel
+@{
+    Layout = "_EmailLayout";
+    ViewData["EmailTitle"] = "Wholesale Account Response";
+}
+
+<div>
+    <p>Dear @Model.StoreUser.Name</p>
+    @if (Model.Application.Result == MonksInn.Domain.Enums.WholesaleApplicationResult.Accepted)
+    {
+        <p>Your Request for a wholesale account has been accepted. if you browse to the store page you will now notice you will see our cellar stock instead of the usual tapped stock.</p>
+    }
+    else if (Model.Application.Result == MonksInn.Domain.Enums.WholesaleApplicationResult.Rejected)
+    {
+        <p>We regret to inform you that your application for a wholesale account has been denied. please contact on our contact us page for further information.</p>
+    }
+    <p>
+        Thanks,
+        <br />The Monk's Inn Team
+    </p>
+</div>

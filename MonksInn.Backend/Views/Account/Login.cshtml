@@ -1,0 +1,35 @@
+﻿@model MonksInn.Backend.Models.Account.LoginViewModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<h1 class="text-center">Log in</h1>
+
+
+<form asp-action="Login">
+    <input asp-for="RedirectTo" type="hidden" class="form-control" />
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ClearPassword" class="control-label"></label>
+        <input asp-for="ClearPassword" type="password" class="form-control" />
+        <span asp-validation-for="ClearPassword" class="text-danger"></span>
+        <div><a href="@Url.Action("ForgotPassword")">Forgot your password?</a></div>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+        </label>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Log in" class="btn btn-outline-primary btn-block" />
+    </div>
+</form>
+

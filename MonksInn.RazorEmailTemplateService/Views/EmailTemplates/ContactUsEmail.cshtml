@@ -1,0 +1,24 @@
+﻿@model MonksInn.RazorEmailTemplateService.Models.ContactUsModel
+@{
+    Layout = "_EmailLayout";
+    ViewData["EmailTitle"] = "Contact Us Request";
+}
+
+<div>
+    <p>Dear Admin</p>
+    <p>A message has been sent by the Monks inn contact us form.</p>
+    <div><strong>User Name: </strong>@Model.UserName</div>
+    <div><strong>User Email: </strong>@Model.UserEmail</div>
+    <p>
+        <div><strong>User Message: </strong></div>
+        <div>@Model.UserMessage</div>
+    </p>
+
+    <p>
+        Thanks,
+        <br />The Monk's Team
+    </p>
+    <div>
+        @await Html.PartialAsync("EmailButton", Model.ResponseButton)
+    </div>
+</div>

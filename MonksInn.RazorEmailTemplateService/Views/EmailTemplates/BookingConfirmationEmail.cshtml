@@ -1,0 +1,35 @@
+﻿@model MonksInn.RazorEmailTemplateService.Models.BookingConfirmationModel
+@{
+    Layout = "_EmailLayout";
+    ViewData["EmailTitle"] = "Booking Confirmation";
+
+    string ToTimeFormat(int value)
+    {
+        return $"{BufferLength(value,2)}:00";
+    }
+    string BufferLength(long value, int totaldigits)
+    {
+        var valueString = value.ToString();
+        if (valueString.Length < totaldigits)
+        {
+            valueString = valueString.PadLeft(totaldigits, '0');
+        }
+        return valueString;
+    }
+}
+
+<div>
+    <p>Dear @Model.Booking.FullName</p>
+    <p>Your payment has been received and your booking has been confirmed for the following:</p>
+    <div><strong>Date: </strong>@Model.Booking.DateOfBooking.ToString("dd MMMM yyyy")</div>
+    <div><strong>Time: </strong>@($"{ToTimeFormat(Model.Booking.StartTime)} - {ToTimeFormat(Model.Booking.EndTime)}")</div>
+    <div><strong>Name: </strong>@Model.Booking.FullName</div>
+    <div><strong>Occasion: </strong>@Model.Booking.Occasion</div>
+    <div><strong>Guests: </strong>@Model.Booking.NumberOfGuests</div>
+    
+    <p>
+        Thanks,
+        <br />The Monk's Team
+    </p>
+ 
+</div>

@@ -1,0 +1,20 @@
+﻿@model MonksInn.RazorEmailTemplateService.Models.WholesaleApplicationModel
+@{
+    Layout = "_EmailLayout";
+    ViewData["EmailTitle"] = "Wholesale Account Requested";
+}
+
+<div>
+    <p>Dear Admin</p>
+    <p>The Following user has applied for a wholesale licence. please click the link below to review the application.</p>
+    <div><strong>User Name: </strong>@Model.StoreUser.Name </div>
+    <div><strong>User Email: </strong>@Model.StoreUser.EmailAddress</div>
+   
+    <p>
+        Thanks,
+        <br />The Monk's Team
+    </p>
+    <div>
+        @await Html.PartialAsync("EmailButton", Model.ReviewAccountButton)
+    </div>
+</div>

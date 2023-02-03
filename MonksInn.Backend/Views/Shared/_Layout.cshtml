@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monks Backend @(string.IsNullOrWhiteSpace(ViewData["Title"] as string) ? "" : $"| {ViewData["Title"]}")</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=eEYKq0MYk5">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=eEYKq0MYk5">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=eEYKq0MYk5">
+    <link rel="manifest" href="/favicon/site.webmanifest?v=eEYKq0MYk5">
+    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=eEYKq0MYk5" color="#333333">
+    <link rel="shortcut icon" href="/favicon/favicon.ico?v=eEYKq0MYk5">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/favicon/browserconfig.xml?v=eEYKq0MYk5">
+    <meta name="theme-color" content="#ffffff">
+
+
+
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="~/sass/site.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="full-page-spinner"><span class="spinner-border" style="width: 3rem; height: 3rem;"></span></div>
+    <div class="alert-container"></div>
+
+    <nav class="navbar navbar-light bg-light  fixed-top ">
+        <a class="navbar-brand has-logo" style="margin-right:0px;" href="#"><img class="navbar-brand-logo" src="/images/monks-logo-black.png" /> Monks Backend</a>
+        <button type="button" onclick="ToggleSideNav()" class="btn btn-sm btn-outline-primary btn-burger"><span class="fa fa-bars"></span></button>
+    </nav>
+    <div class="sidebar bg-primary">
+
+        @if (User.IsAuthenticated())
+        {
+            <ul class="sidebar-list">
+                @if (User.HasAccess(SystemPermission.CanAccessBeerIndexPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Beer Library"))" href="@Url.Action("Index", "BeerLibrary")"> Beer Library</a></li>
+                }
+                @if (User.HasAccess(SystemPermission.CanAccessStockOrdersPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Stock Orders"))" href="@Url.Action("Index", "StockOrder")">Stock Orders</a></li>
+                }
+                @if (User.HasAccess(SystemPermission.CanAccessCellarStockPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Cellar Stock"))" href="@Url.Action("Index", "Cellar")">Cellar Stock</a></li>
+                }
+                @if (User.HasAccess(SystemPermission.CanAccessTappedStockPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Tapped Stock"))" href="@Url.Action("Index", "Tap")">Tapped Stock</a></li>
+                }
+
+
+                @if (User.HasAccess(SystemPermission.CanAccessDispatchOrdersPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Dispatch"))" href="@Url.Action("Dispatch", "Orders")">Dispatch</a></li>
+                }
+                @if (User.HasAccess(SystemPermission.CanAccessDeliveryOrdersPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Deliveries"))" href="@Url.Action("Deliveries", "Orders")">Deliveries</a></li>
+                }
+                @if (User.HasAccess(SystemPermission.CanAccessTakeawayOrdersPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Takeaways"))" href="@Url.Action("Takeaways", "Orders")">Takeaways</a></li>
+                }
+                @if (User.HasAccess(SystemPermission.CanAccessAllOrdersPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Orders"))" href="@Url.Action("Index", "Orders")">All Orders</a></li>
+                }
+
+                @if (User.HasAccess(SystemPermission.CanAccessBookingsPage))
+                {
+                    <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Bookings"))" href="@Url.Action("Index", "Booking")">Bookings</a></li>
+                }
+
+            </ul>
+
+            @if (User.HasAccess(SystemPermission.CanSeeAdminLinks))
+            {
+                <a class="sidebar-header">Admin</a>
+                <ul class="sidebar-list">
+                    @if (User.HasAccess(SystemPermission.CanAccessSystemUserPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "System Users"))" href="@Url.Action("Index", "SystemUser")">System Users</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessStoreUserPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Store Users"))" href="@Url.Action("Index", "StoreUser")">Store Users</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessWholesaleApplicationPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Wholesale Application"))" href="@Url.Action("Index", "WholesaleApplication")">Wholesale Applications</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessSystemSettingsPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "System Settings"))" href="@Url.Action("Index", "SystemSettings")">System Settings</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessPubLocationPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Pub Locations"))" href="@Url.Action("Index", "PubLocation")">Pub Locations</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessPricingStructurePage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Pricing Structure"))" href="@Url.Action("Index", "PricingStructure")">Pricing Structure</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessDeliverySlotsPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Delivery Slots"))" href="@Url.Action("Index", "DeliverySlot")">Delivery Slots</a></li>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanAccessPromoCodesPage))
+                    {
+                        <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Promo Codes"))" href="@Url.Action("Index", "PromoCode")">Promo Codes</a></li>
+                    }
+                </ul>
+            }
+
+            <a class="sidebar-header">User</a>
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item"><a class="@(CustomHtmlHelper.SetActiveNav(ViewData["ActiveNav"], "Account Profile"))" href="@Url.Action("Profile", "Account")">Account</a></li>
+                <li class="sidebar-list-item"><a class="" href="@Url.Action("Logout", "Account")">Logout</a></li>
+            </ul>
+        }
+
+    </div>
+    <div class="content">
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">@ViewData["Title"]</a>
+            <form class="form-inline">
+                @RenderSection("ContextButtons", false)
+
+            </form>
+        </nav>
+        <div class="container-fluid" style="position:relative; padding:15px;">
+            @RenderBody()
+        </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" id="DeleteModal" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="">Are you sure you want to delete '<span id="DeleteLabel"></span>'?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="DeleteButton" class="btn btn-danger">Yes</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/select2/js/select2.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(".modal").on('show.bs.modal', function () {
+                $('[data-toggle="tooltip"]').tooltip('hide');
+            });
+        });
+    </script>
+
+    @if (TempData["Alerts"] != null)
+    {
+
+        @foreach (var item in Newtonsoft.Json.JsonConvert.DeserializeObject<List<Alert>>(TempData["Alerts"].ToString()))
+        {
+            <script>AddAlert("@item.Message", "@item.Type");</script>
+        }
+    }
+</body>
+</html>

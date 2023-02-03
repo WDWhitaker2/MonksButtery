@@ -1,0 +1,20 @@
+﻿@model Guid?
+
+
+@{
+    MonksInn.Domain.File file = null;
+    if (Model.HasValue)
+    {
+        file = new MonksInn.Logic.FileLogic(Uow).GetFile(Model.Value);
+    }
+}
+
+<div class="custom-file" id="@ViewData.TemplateInfo.HtmlFieldPrefix">
+    <input type="hidden" class="hidden-file-input" name="@ViewData.TemplateInfo.HtmlFieldPrefix" value="@file?.Id" />
+    <input type="file" class="custom-file-input" id="customFile" onchange="UploadFile('#@ViewData.TemplateInfo.HtmlFieldPrefix')">
+    <label class="custom-file-label" for="customFile"> @(file != null ? file.Filename : "Choose file")</label>
+    <div class="progress" style="display:none;" for="customFile">
+        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+

@@ -1,0 +1,67 @@
+﻿@model MonksInn.Web.Models.Store.FilterViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (!Model.IsWholeSaleUser)
+{
+    <div id="storebtncontainer">
+        @{
+            var deliveryIsSelected = Model.Availability.Count == 1 && Model.Availability.Contains("Delivery");
+            var takeawayIsSelected = Model.Availability.Count == 1 && Model.Availability.Contains("Takeaway");
+        }
+        <div class="text-center">
+            <a href="@Url.Action("Index","Store" , new { Availability = "Delivery" })" class="btn btn-secondary @(deliveryIsSelected ? "active" : "") ">Delivery</a>
+            <a href="@Url.Action("Index","Store" , new { Availability = "Takeaway" })" class="btn btn-secondary @(takeawayIsSelected ? "active" : "")  ">Takeaway</a>
+        </div>
+        @if (Model.Availability.Count == 1 && Model.Availability.Contains("Takeaway"))
+        {
+            <div class="text-center pt-1">
+                @foreach (var item in Model.TakeawayLocationLists)
+                {
+                    var locationIsSelected = Model.Locations.Count == 1 && Model.Locations.Contains(item);
+                    <a href="@Url.Action("Index","Store" , new { Availability = "Takeaway",Locations = item  })" class="btn btn-secondary @(locationIsSelected ? "active" : "")">@item</a>
+                }
+            </div>
+        }
+
+    </div>
+    @foreach (var group in Model.TappedStock.GroupBy(a => a.TapType))
+    {
+
+        <div class="text-center">
+
+
+
+            <div class="page-header">
+                <h1 class="text-white m-2" style="display:inline-block;"><strong>@group.Key</strong></h1>
+            </div>
+            <div class="store-card-group">
+
+                @foreach (var item in group.ToList())
+                {
+                    <partial name="_ProductDisplay" model="new MonksInn.Web.Models.ProductDisplayViewModel { TappedStockItem = item, ProductIsLiked=Model.UserFavorites.Contains(item.Beer.Id)  }" />
+                    
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="text-center">
+        <div class="store-card-group">
+
+            @foreach (var groupeditem in Model.CellarStock)
+            {
+                <partial name="_ProductDisplay" model="new MonksInn.Web.Models.ProductDisplayViewModel { CellarStockItem = groupeditem, ProductIsLiked=Model.UserFavorites.Contains(groupeditem.Beer.Id)  }" />
+            }
+
+          
+        </div>
+    </div>
+}
+
+
+<button onclick="StoreLogic.OpenFilterModal()" type="button" style="position:fixed; right:30px; top: 100px;" class="btn btn-round btn-secondary btn-filter @(Model.HasFilters ? "has-asterisk" : "")"><span class="mi mi-filter-alt"></span></button>
+<button onclick="StoreLogic.OpenCartModal()" type="button" style="position:fixed; right:30px; top: 160px;" class="btn btn-round btn-secondary btn-cart  @(Model.CartHasItems ? "has-asterisk" : "")"><span class="mi mi-shopping-cart"></span></button>

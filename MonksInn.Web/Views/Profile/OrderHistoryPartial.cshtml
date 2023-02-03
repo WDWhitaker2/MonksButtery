@@ -1,0 +1,59 @@
+﻿@model MonksInn.Web.Models.Profile.ProfileViewModel
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-sm table-hover">
+        <thead>
+            <tr>
+                <th class="pinch">Date Created</th>
+                <th class="pinch">Order Number</th>
+                <th>items</th>
+                <th>Delivery/Takeaway Information</th>
+                <th class="pinch text-right">Total</th>
+                <th class="pinch">Status</th>
+                <th class="pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td class="pinch">@item.DateCreated.ToString("dd MMM yyyy HH:mm")</td>
+                    <td class="pinch">@item.OrderNumber.BufferLength(6)</td>
+                    <td>
+                        @foreach (var orderitem in item.Items)
+                        {
+                            <div class="text-nowrap">@orderitem.TappedStockUnits pints of @orderitem.TappedStockItem.Beer.BeerName by @orderitem.TappedStockItem.Beer.BreweryName</div>
+                        }
+                    </td>
+                    <td>
+                        @if (item.IsForDelivery)
+                        {
+                            <div>
+                                <div class="font-weight-bolder">Delivery To:</div>
+                                <div>@Html.Raw(item.DeliveryAddress.ToAddressString(",<br/>"))</div>
+                                <div>On @item.DeliveryDateAllocation.ToDisplayString(),</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="font-weight-bolder">Pickup From:</div>
+                                <div>@item.PubLocation.Name</div>
+                                <div style="white-space: pre-line">@item.PubLocation.Address</div>
+                                <div>Before @item.DateCreated.AddDays(2).ToString("dd MMM yyyy"),</div>
+
+                            </div>
+
+                        }
+                    </td>
+                    <td class="pinch text-right">£ @item.Total</td>
+                    <td class="pinch">@item.OrderStatus.GetDisplayName()</td>
+                    <td class="pinch">
+                        <a title="View Order" href="@Url.Action("Order", new { id=item.Id })" class="btn btn-outline-primary btn-sm ">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

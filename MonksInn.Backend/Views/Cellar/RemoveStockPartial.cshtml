@@ -1,0 +1,26 @@
+﻿@model MonksInn.Backend.Models.Cellar.RemoveStockPartialViewModel
+
+<form onsubmit="SubmitRemoveStock(event)">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="UnitSize" type="hidden" />
+    <input asp-for="Beer" type="hidden" />
+
+    <div class="form-group">
+        <label class="control-label">Why are you archiving a @Model.UnitSize of @Model.Beer?</label>
+        <textarea asp-for="Reason" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Reason" class="text-danger"></span>
+    </div>
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+        <button type="button" data-dismiss="modal" class="btn btn-sm btn-outline-primary">Close</button>
+    </div>
+</form>
+
+
+@if (Model.ForceCloseModal)
+{
+    <script>
+        $(".modal").modal("hide");
+    </script>
+}

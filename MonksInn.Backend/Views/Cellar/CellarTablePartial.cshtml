@@ -1,0 +1,72 @@
+﻿@model MonksInn.Backend.Models.Cellar.CellarViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<table class="table table-sm table-hover" id="CellarTable">
+    <thead>
+        <tr>
+            <th>Sell By Date</th>
+            <th>Beer</th>
+            <th>Type</th>
+            <th>Unit Size</th>
+            <th class="text-right">Cost Price</th>
+            <th class="text-right">Wholesale Price</th>
+            <th class="text-center pinch">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.StockItems)
+        {
+            var tablerowcolor = "";
+            var validationError = "";
+
+            if (!item.WholesalePrice.HasValue)
+            {
+                tablerowcolor = "table-warning";
+                validationError = "This Beer requires a Wholesale Price.";
+            }
+            if (!item.SellByDate.HasValue)
+            {
+                tablerowcolor = "table-warning";
+                validationError = "Beer has no sell by date.";
+            }
+            else if (item.SellByDate.HasValue && item.SellByDate.Value.Date <= DateTime.Now.Date)
+            {
+                tablerowcolor = "table-danger";
+                validationError = "Beer has reached it's sell by date.";
+            }
+            else if (item.SellByDate.HasValue && item.SellByDate.Value.Date <= DateTime.Now.Date.AddDays(7))
+            {
+                tablerowcolor = "table-warning";
+                validationError = "Beer is nearing it's sell by date.";
+            }
+
+            <tr class="@tablerowcolor" data-toggle="tooltip" data-html="true" data-title="@validationError">
+
+                <td>@item.SellByDate?.ToString("dd MMM yyyy") </td>
+                <td>@item.Beer.BreweryName - @item.Beer.BeerName</td>
+                <td>@(item.Beer.BeerType.GetDisplayName() ) - @item.Beer.SubType</td>
+                <td>@item.UnitSize</td>
+                <td class="text-right">@item.CostPrice</td>
+                <td class="text-right">@item.WholesalePrice</td>
+                <td class="text-right pinch ignorefilter">
+                    @if (User.HasAccess(SystemPermission.CanUpdateCellarStock))
+                    {
+                        <button class="btn btn-xs btn-outline-primary" onclick="UpdateStockModal.open({ getParameters: { id:'@item.Id'}})">Update</button>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanTapCellarStock))
+                    {
+                        <button class="btn btn-xs btn-outline-primary" onclick="ShowTapBeerModal('@item.Id')">Tap</button>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanArchiveCellarStock))
+                    {
+                        <button class="btn btn-xs btn-outline-danger" onclick="ShowRemoveStockModal('@item.Id')">Archive</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

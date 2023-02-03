@@ -1,0 +1,20 @@
+﻿@model MonksInn.RazorEmailTemplateService.Models.StoreUserRegistrationModel
+@{
+    Layout = "_EmailLayout";
+    ViewData["EmailTitle"] = "Welcome!";
+}
+
+
+<div>
+    <p>Dear @Model.User.Name</p>
+    <p>Welcome to Monks Inn.</p>
+    <p>Before you can continue using our application, you will need to confirm your email address.</p>
+    <p>
+        Thanks,
+        <br />The Monk's Team
+    </p>
+    <div>
+        @await Html.PartialAsync("EmailButton", Model.ResetButton)
+    </div>
+
+</div>

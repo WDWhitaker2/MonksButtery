@@ -1,0 +1,34 @@
+﻿@model MonksInn.Web.Models.Profile.DeleteAddressPartialViewModel
+
+
+<div class="modal-body">
+
+    @if (Model.DeleteSuccessful)
+    {
+        <script>
+            AddAlert("Address deleted successfully");
+            $(".modal").modal('hide');
+        </script>
+    }
+    else
+    {<h5>Are you sure you want to delete the following address?</h5>
+        <div>
+            <hr />
+            <div>@Model.Address.AddressLine1</div>
+            <div>@Model.Address.AddressLine2</div>
+            <div>@Model.Address.City</div>
+            <div>@Model.Address.PostalCode</div>
+            <div>@Model.Address.Country</div>
+
+            <div class="text-right">
+
+                <form>
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">Cancel</button>
+                </form>
+            </div>
+        </div>
+    }
+
+</div>

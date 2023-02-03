@@ -1,0 +1,75 @@
+﻿@model MonksInn.Backend.Models.BeerLibrary.IndexViewModel
+@{
+    ViewData["Title"] = "Beer Library";
+    ViewData["ActiveNav"] = "Beer Library";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanAddUpdateBeer))
+        {
+            <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Add", "BeerLibrary")">Add Beer</a>
+        }
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover" id="BeerLibraryTable" style="white-space:nowrap;">
+        <thead>
+            <tr>
+                <th class="pinch">Beer Name</th>
+                <th class="pinch">Brewery</th>
+                <th class="pinch">Type</th>
+                <th class="pinch">Strength</th>
+                <th>Notes</th>
+
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BeerList)
+            {
+                var rowcolour = item.ValidationErrors().Any() ? "table-danger" : "";
+
+
+
+                <tr class="@rowcolour" data-toggle="tooltip" data-html="true" data-title="@(string.Join("<br/>", item.ValidationErrors()))" >
+                    <td>@item.BeerName</td>
+                    <td>@item.BreweryName</td>
+                    <td>@(item.BeerType.GetDisplayName()) - @item.SubType @(item.IsSpecialityBeer ? "(Special)" : "")</td>
+                    <td>@item.Strength%</td>
+                    @{
+                        var finalnotes = $"<img class=\"img-fluid\" src=\"{Url.Action("GetThumbnail", "File", new { id = item.ImageId })}\" /><div>{item.Notes}<div/>";
+                    }
+                    <td class="force-ellipsis" data-toggle="tooltip" data-html="true" data-title="@finalnotes" style="min-width:300px"><span>@item.Notes</span></td>
+                    <td class="text-center pinch ignorefilter">
+                        @if (User.HasAccess(SystemPermission.CanAddUpdateBeer))
+                        {
+                            <a class="btn btn-xs btn-outline-primary" href="@Url.Action("Update", new { id= item.Id })">Update</a>
+                        }
+                        @if (User.HasAccess(SystemPermission.CanArchiveBeer))
+                        {
+                            <a class="btn btn-xs btn-outline-danger" href="#" onclick="ConfirmDelete('@Url.Action("Archive", "BeerLibrary", new { id = item.Id })', '@item.BeerName by @item.BreweryName')">Archive</a>
+                        }
+                    </td>
+                    @*<td class="text-center"></td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        InitFilterTable("#Search", "#BeerLibraryTable tbody");
+    </script>
+}

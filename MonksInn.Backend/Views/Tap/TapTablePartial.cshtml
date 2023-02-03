@@ -1,0 +1,55 @@
+﻿@model MonksInn.Backend.Models.Tap.TapViewModel
+
+
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Date Tapped</th>
+            <th>Location</th>
+            <th>Tap</th>
+            <th>Beer</th>
+            <th>Type</th>
+            <th>Unit Size</th>
+            <th class="">Delivery/Takeaway</th>
+            <th class="text-right">Retail Price</th>
+            <th class="text-center pinch">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.StockItems)
+        {
+
+            var tablerowcolor = "";
+            var validationError = "";
+
+            if (!item.RetailPrice.HasValue)
+            {
+                tablerowcolor = "table-warning";
+                validationError = "This beer requires a retail price.";
+            }
+            <tr class="@tablerowcolor" data-toggle="tooltip" data-html="true" data-title="@validationError">
+                <td>@item.DateCreated.ToString("dd MMM yyyy")</td>
+                <td>@item.PubLocation.Name</td>
+                <td>@item.TapType</td>
+                <td>@item.Beer.BreweryName - @item.Beer.BeerName</td>
+                <td>@(item.Beer.BeerType.GetDisplayName()) - @item.Beer.SubType</td>
+                <td>@item.UnitSize</td>
+                <td>@(item.ForTakeaway ? item.ForDelivery ? "Both" : "Takeaway" : "Delivery")</td>
+                <td class="text-right">@item.RetailPrice</td>
+                <td class="text-right pinch ignorefilter">
+                    @if (User.HasAccess(SystemPermission.CanUpdateTappedStock))
+                    {
+                        <button class="btn btn-xs btn-outline-primary" onclick="ShowUpdateStockModal('@item.Id')">Update</button>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanArchiveTappedStock))
+                    {
+                        var beerAndBreweryTitle = System.Web.HttpUtility.JavaScriptStringEncode($"{item.Beer.BeerName} by {item.Beer.BreweryName}");
+                        <button class="btn btn-xs btn-outline-danger" onclick="ConfirmDelete('@Url.Action("Archive", "Tap", new { id = item.Id })', '@beerAndBreweryTitle')">Archive</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -1,0 +1,164 @@
+﻿@model MonksInn.Web.Models.Profile.OrderViewModel
+
+@{
+    ViewData["Title"] = "Order";
+    ViewBag.EnableClientSideValidation = false;
+}
+
+<div class="pb-4 dark-container">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Order: @Model.Order.OrderNumber.BufferLength(6)</h2>
+
+            </div>
+            <div class="card-body">
+                <h5 class="mb-0">Order Date</h5>
+                <div class="mb-4">@Model.Order.DateCreated.ToString("dd MMM yyyy")</div>
+                <h5 class="mb-0">Status</h5>
+                <div class="mb-4">@Model.Order.OrderStatus.GetDisplayName()</div>
+                @if (Model.Order.IsForDelivery)
+                {
+                    <h5 class="mb-0">Delivery Information</h5>
+                }
+                else
+                {
+                    <h5 class="mb-0">Takeaway Information</h5>
+                }
+                @if (Model.Order.IsForDelivery)
+                {
+                    <div>
+                        <div class="font-weight-bolder">Delivery To:</div>
+                        <div>@Html.Raw(Model.Order.DeliveryAddress.ToAddressString(",<br/>"))</div>
+                        <div>On @Model.Order.DeliveryDateAllocation.ToDisplayString(),</div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <div class="font-weight-bolder">Pickup From:</div>
+                        <div>@Model.Order.PubLocation.Name</div>
+                        <div style="white-space: pre-line">@Model.Order.PubLocation.Address</div>
+                        <div>Before @Model.Order.DateCreated.AddDays(2).ToString("dd MMM yyyy"),</div>
+
+                    </div>
+
+                }
+                @if (Model.Order.PromoCodeId.HasValue)
+                {
+
+                    <h5 class="mb-0">Promo Code</h5>
+                    <div class="mb-4">@Model.Order.PromoCode</div>
+                }
+
+
+                <h5 class="mb-0">Items</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Beer</th>
+                                <th>Units</th>
+                                <th class="text-right pinch">Unit Price</th>
+                                <th class="text-right pinch">Total</th>
+                            </tr>
+                        </thead>
+                        @{
+                            var grandTotal = 0m;
+                        }
+                        @for (int i = 0; i < Model.Order.Items.Count; i++)
+                        {
+                            var subTotal = Model.Order.Items[i].TappedStockUnits * Model.Order.Items[i].TappedStockItemPricePerUnit;
+                            grandTotal += subTotal;
+                            <tr>
+                                <td>
+                                    <div>@Model.Order.Items[i].TappedStockItem.Beer.BeerName by @Model.Order.Items[i].TappedStockItem.Beer.BreweryName</div>
+                                    <div>
+
+                                        @if (Model.Order.Items[i].TappedStockItem.ForDelivery && Model.Order.Items[i].TappedStockItem.ForTakeaway)
+                                        {
+                                            <small>Available for Delivery or  Takeaway at @Model.Order.Items[i].TappedStockItem.PubLocation.Name</small>
+                                        }
+                                        else if (Model.Order.Items[i].TappedStockItem.ForTakeaway)
+                                        {
+                                            <small>Available for Takeaway at @Model.Order.Items[i].TappedStockItem.PubLocation.Name</small>
+                                        }
+                                        else if (Model.Order.Items[i].TappedStockItem.ForDelivery)
+                                        {
+                                            <small>Available for Delivery</small>
+                                        }
+                                    </div>
+                                    <div>
+                                        <span asp-validation-for="Order.Items[i]" class="text-danger"></span>
+                                    </div>
+
+                                </td>
+                                <td class="pinch">
+                                    @Model.Order.Items[i].TappedStockUnits
+                                </td>
+                                <td class="text-right pinch">£ @Model.Order.Items[i].TappedStockItemPricePerUnit</td>
+                                <td class="text-right pinch ">£ <span class="subtotal">@(subTotal)</span></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="text-right" colspan="3">Sub Total</td>
+                            <td class="text-right pinch">£ <span class="grandtotal">@(grandTotal)</span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right" colspan="3">Discount</td>
+                            <td class="text-right pinch">£ <span class="grandtotal">@(Model.Order.PromoDiscount)</span></td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right" colspan="3">Grand Total</td>
+                            <td class="text-right pinch">£ <span class="grandtotal">@(Model.Order.Total)</span></td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                <div class="row justify-content-end">
+                    <div class="col-sm-6 col-lg-4">
+
+                        @if (Model.Order.OrderStatus == OrderStatus.PendingPayment)
+                        {
+                            <a href="@Url.Action("Payment", "Checkout", new { id=Model.Order.Id })" class="btn btn-primary btn-block">Proceed To Payment</a>
+                            <a data-toggle="modal" data-target="#cancelOrderModal" class="btn btn-danger btn-block">Cancel Order</a>
+                        }
+                        <a class="btn btn-secondary btn-block" href="@Url.Action("Index")">Go back to Profile</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    @if (Model.Order.OrderStatus == OrderStatus.PendingPayment)
+    {
+
+        <div class="modal" id="cancelOrderModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Are you sure you want to delete this order?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-right">
+                            <a class="btn btn-danger" href="@Url.Action("CancelOrder", "Profile", new { id = Model.Order.Id })">Yes</a>
+                            <button class="btn btn-primary" type="button" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+
+        </script>
+    }
+
+}

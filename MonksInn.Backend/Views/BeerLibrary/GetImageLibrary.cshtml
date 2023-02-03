@@ -1,0 +1,57 @@
+﻿@model List<MonksInn.Backend.Models.BeerLibrary.GetImageLibraryViewModel>
+
+@{
+    ViewData["Title"] = "Beer Image Library";
+    ViewData["ActiveNav"] = "Beer Image Library";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover" id="BeerImageTable" style="white-space:nowrap;">
+        <thead>
+            <tr>
+                <th class="pinch">Beer Name</th>
+                <th class="pinch">Brewery</th>
+                <th>Image</th>
+                <th class="pinch">Size</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderByDescending(a => a.Size))
+            {
+
+
+
+                <tr>
+                    <td>@item.BeerName</td>
+                    <td>@item.BreweryName</td>
+                    <td><a href="@Url.Action("Get", "File", new { id = item.ImageId })">@item.ImageId</a></td>
+                    <td>@((decimal)item.Size/ 1048576m)</td>
+                    <td class="text-center pinch ignorefilter">
+                        <a class="btn btn-xs btn-outline-danger" href="@Url.Action("CompressBeerImage","BeerLibrary", new {id = item.BeerId})">Compress</a>
+                    </td>
+                    @*<td class="text-center"></td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        InitFilterTable("#Search", "#BeerImageTable tbody");
+    </script>
+}

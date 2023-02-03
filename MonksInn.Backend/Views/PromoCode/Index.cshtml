@@ -1,0 +1,60 @@
+﻿@model MonksInn.Backend.Models.PromoCode.IndexViewModel
+@{
+    ViewData["Title"] = "Promo Codes";
+    ViewData["ActiveNav"] = "Promo Codes";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanAddUpdatePromoCodes))
+        {
+            <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Add", "PromoCode")">Add Code</a>
+        }
+    </div>
+
+</div>
+
+<div class="table-responsive" >
+    <table class="table table-sm table-hover" id="PromoTable" style="white-space:nowrap;">
+        <thead>
+            <tr>
+                <th class="">Code</th>
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Codes)
+            {
+
+                <tr>
+                    <td>@item.Code</td>
+                    <td class="text-center pinch ignorefilter">
+                        @if (User.HasAccess(SystemPermission.CanAddUpdatePromoCodes))
+                        {
+                            <a class="btn btn-xs btn-outline-primary" href="@Url.Action("Update", new { id= item.Id })">Update</a>
+                        }
+                        @if (User.HasAccess(SystemPermission.CanArchivePromoCodes))
+                        {
+                            <a class="btn btn-xs btn-outline-danger" href="#" onclick="ConfirmDelete('@Url.Action("Archive", "PromoCode", new { id = item.Id })', 'the code @item.Code')">Archive</a>
+                        }
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        InitFilterTable("#Search", "#PromoTable tbody");
+
+    </script>
+}

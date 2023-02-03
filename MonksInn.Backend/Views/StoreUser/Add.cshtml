@@ -1,0 +1,53 @@
+﻿@model MonksInn.Backend.Models.StoreUser.AddViewModel
+
+@{
+    ViewData["Title"] = $"{(ViewBag.IsUpdate == true ? "Update" : "Add")} Store User";
+    ViewData["ActiveNav"] = "Store Users";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <form action="@Url.Action()" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailAddress" class="control-label"></label>
+                <input asp-for="EmailAddress" class="form-control" />
+                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsWholeSaleUser" type="radio" value="false" /> Retail User
+                    </label>
+                </div>
+                <div class=" form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsWholeSaleUser" type="radio" value="true" /> Wholesale User
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="EmailAddressVerified" type="checkbox" value="True" /> Email is Verified
+                    </label>
+                </div>
+                
+            </div>
+
+            <div class="form-group text-right">
+                <input type="submit" value="@(ViewBag.IsUpdate == true ? "Update" : "Add")" class="btn btn-sm btn-outline-primary" />
+                <a asp-action="Index" class="btn  btn-sm btn-outline-primary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+

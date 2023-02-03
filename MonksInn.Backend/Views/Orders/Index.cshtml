@@ -1,0 +1,73 @@
+﻿@model MonksInn.Backend.Models.Order.OrderViewModel
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["ActiveNav"] = "Orders";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+    </div>
+
+</div>
+
+<div class="table-responsive" id="OrdersTablePartial">
+    <table class="table table-sm table-hover" id="OrdersTable">
+        <thead>
+            <tr>
+                <th class="pinch">Order Number</th>
+                <th class="pinch">Status</th>
+                <th>items</th>
+                <th class="pinch text-right">Total</th>
+                <th class="pinch  text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td class="pinch">@item.OrderNumber.BufferLength(6)</td>
+                    <td class="pinch">@item.OrderStatus.GetDisplayName()</td>
+                    <td>
+                        @foreach (var orderitem in item.Items)
+                        {
+                            <div class="text-nowrap">@orderitem.TappedStockUnits pints of @orderitem.TappedStockItem.Beer.BeerName by @orderitem.TappedStockItem.Beer.BreweryName (@orderitem.TappedStockItem.TapType)</div>
+                        }
+                    </td>
+
+                    <td class="pinch text-right">£ @item.Total</td>
+                    <td class="pinch text-center">
+                        <a class="btn btn-outline-primary btn-sm " href="@Url.Action("View", "Orders", new { id = item.Id })">View Order</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+@section Scripts{
+
+    <script>
+        InitFilterTable("#Search", "#OrdersTable tbody");
+        var ajaxtable = InitAjaxPartial("#OrdersTablePartial", "@Url.Action("OrdersTablePartial", "Orders")", { InitOnReady: false});
+
+        @*function MarkBeerDispatched(id) {
+            PageSpinner.toggle(true);
+            $.get(`@Url.Action("MarkOrderDispatched", "Orders")/${id}`, function (data) {
+                AddAlert("Order dispatched successfully.");
+                ajaxtable.refresh();
+                PageSpinner.toggle(false);
+            });
+
+        }*@
+    </script>
+}

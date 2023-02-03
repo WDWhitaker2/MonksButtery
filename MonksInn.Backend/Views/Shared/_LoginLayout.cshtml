@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monks Backend @(string.IsNullOrWhiteSpace(ViewData["Title"] as string) ? "" : $"| {ViewData["Title"]}")</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=eEYKq0MYk5">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=eEYKq0MYk5">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=eEYKq0MYk5">
+    <link rel="manifest" href="/favicon/site.webmanifest?v=eEYKq0MYk5">
+    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg?v=eEYKq0MYk5" color="#333333">
+    <link rel="shortcut icon" href="/favicon/favicon.ico?v=eEYKq0MYk5">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="/favicon/browserconfig.xml?v=eEYKq0MYk5">
+    <meta name="theme-color" content="#ffffff">
+
+
+
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="~/sass/site.css" rel="stylesheet" />
+
+</head>
+<body class=" bg-dark">
+   
+        <div class="full-page-spinner"><span class="spinner-border" style="width: 3rem; height: 3rem;"></span></div>
+
+
+        <div class="login-Container">
+
+            <div class="card">
+                <img class="card-img-top" src="/images/monks-logo-black.png" alt="Card image cap">
+                <div class="card-body">
+                    @RenderBody()
+                </div>
+            </div>
+
+        </div>
+
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.js"></script>
+
+
+        @RenderSection("Scripts", required: false)
+
+        <script>
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+
+                $(".modal").on('show.bs.modal', function () {
+                    $('[data-toggle="tooltip"]').tooltip('hide');
+                });
+            });
+        </script>
+    </body>
+</html>

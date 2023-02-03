@@ -1,0 +1,75 @@
+﻿@model MonksInn.Backend.Models.StockOrder.ReceiveStockPartialViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<form onsubmit="SubmitReceiveOrder(event)">
+
+    @Html.HiddenFor(a => a.Id)
+
+    <div class="form-group">
+        <label asp-for="BeerId" class="control-label"></label>
+        <select asp-for="BeerId" class="form-control">
+            <option></option>
+            @foreach (var item in Model.CurrentBeers)
+            {
+                <option value="@item.Id">@item.BreweryName - @item.BeerName</option>
+            }
+        </select>
+        <span asp-validation-for="BeerId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Strength" class="control-label"></label>
+        <input asp-for="Strength" class="form-control" />
+        <span asp-validation-for="Strength" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="UnitSize" class="control-label"></label>
+        <select asp-for="UnitSize" class="form-control">
+            <option></option>
+            @foreach (var item in Model.UnitSizeList)
+            {
+                <option>@item</option>
+            }
+        </select>
+        <span asp-validation-for="UnitSize" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Units" class="control-label"></label>
+        <input asp-for="Units" type="number" step="1" min="0" class="form-control" />
+        <span asp-validation-for="Units" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="InvoiceNumber" class="control-label"></label>
+        <input asp-for="InvoiceNumber" class="form-control" />
+        <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="UnitPrice" class="control-label"></label>
+        <input asp-for="UnitPrice" type="number" step="0.01" min="0" class="form-control" />
+        <span asp-validation-for="UnitPrice" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SellByDate" class="control-label"></label>
+        <input asp-for="SellByDate" type="date" class="form-control" />
+        <span asp-validation-for="SellByDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-sm btn-outline-primary">Receive</button>
+        <button type="button" data-dismiss="modal" class="btn btn-sm btn-outline-primary">Close</button>
+    </div>
+</form>
+
+
+@if (Model.ForceCloseModal)
+{
+    <script>
+        $(".modal").modal("hide");
+    </script>
+}

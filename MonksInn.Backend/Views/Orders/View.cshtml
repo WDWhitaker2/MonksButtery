@@ -1,0 +1,90 @@
+﻿@model MonksInn.Domain.Order
+
+
+@{
+    ViewData["Title"] = "View Order";
+    ViewData["ActiveNav"] = "View Order";
+}
+
+
+<div class="row pb-4">
+    <div class="col-sm-6 ">
+        <h5>Order Information</h5>
+        <dl class="row">
+
+            <dt class="col-6">Order Number</dt>
+            <dd class="col-6">@Model.OrderNumber.BufferLength(6)</dd>
+
+            <dt class="col-6">Dispatch Type</dt>
+            <dd class="col-6">@(Model.IsForDelivery ? "Delivery" : "Takeaway")</dd>
+
+            <dt class="col-6">Dispatch From</dt>
+            <dd class="col-6">@Model.PubLocation.Name</dd>
+
+            <dt class="col-6">Status</dt>
+            <dd class="col-6">@Model.OrderStatus.GetDisplayName()</dd>
+
+        </dl>
+    </div>
+    <div class="col-sm-6">
+        <h5 class=" text-right">Customer Information</h5>
+        <dl class="row  text-right">
+            <dt class="col-6">User</dt>
+            <dd class="col-6">@Model.StoreUser.Name</dd>
+            @if (Model.IsForDelivery)
+            {
+                <dt class="col-6">Delivery Address</dt>
+                <dd class="col-6">
+                    <div>@Model.DeliveryAddress.AddressLine1</div>
+                    <div>@Model.DeliveryAddress.AddressLine2</div>
+                    <div>@Model.DeliveryAddress.City</div>
+                    <div>@Model.DeliveryAddress.PostalCode</div>
+                    <div>@Model.DeliveryAddress.Country</div>
+                </dd>
+            }
+
+        </dl>
+    </div>
+</div>
+<div class="table-responsive pb-4">
+
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th class="text-right pinch">Units</th>
+                <th class="text-right pinch">Price Per Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.TappedStockItem.Beer.BeerName by @item.TappedStockItem.Beer.BreweryName (@item.TappedStockItem.TapType)</td>
+                    <td class="text-right pinch">@item.TappedStockUnits</td>
+                    <td class="text-right pinch">£ @item.TappedStockItemPricePerUnit</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2" class="text-right">Sub Total</th>
+                <td class="text-right pinch">£ @Model.Total</td>
+            </tr>
+            <tr>
+                <th colspan="2" class="text-right">Discount</th>
+                <td class="text-right pinch">£ @Model.PromoDiscount</td>
+            </tr>
+            <tr>
+                <th colspan="2" class="text-right">Grand Total</th>
+                <td class="text-right pinch">£ @( Model.Total - Model.PromoDiscount)</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<h5>Order History</h5>
+
+<div class="text-right">
+    <a asp-action="Index" class="btn  btn-sm btn-outline-primary">Back</a>
+</div>

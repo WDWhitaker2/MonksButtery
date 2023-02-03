@@ -1,0 +1,265 @@
+﻿@model MonksInn.Web.Models.Home.IndexViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center dark-container" style="padding-left:30px; padding-right:30px;">
+    <div class="container-fluid">
+
+        <h1 class="text-white m-2 pt-4">What's on tap at the </h1>
+        <div class="btn-group btn-group-lg" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-outline-light p-3 pub-btn dropdown-toggle" style="line-height:1em" data-toggle="dropdown">
+                @Model.CurrentPub
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                @foreach (var pubname in Model.OtherPubLocations)
+                {
+                    <a class="dropdown-item" href="@Url.Action(null, null, new { pub=pubname })">@pubname</a>
+                }
+            </div>
+        </div>
+        @foreach (var group in Model.TappedStock.Where(a => a.TapType != "Conditioning" && a.Beer.BeerType != BeerType.Cider).GroupBy(a => a.TapType).OrderByDescending(a => a.Key))
+        {
+            if (group.Any())
+            {
+                <div class="page-header">
+                    <h3 class="text-white m-2" style="display:inline-block;"><strong>@group.Key</strong></h3>
+                </div>
+                <div class="store-card-group productlist">
+
+                    @foreach (var item in group.ToList())
+                    {
+                        <div>
+                            <partial name="_ProductDisplay" model="new MonksInn.Web.Models.ProductDisplayViewModel { IsShort = true, TappedStockItem = item, ShowStoreButtons = false , ShowTapTypeInsteadOfDeliveryOption = true }" />
+                        </div>
+                    }
+                </div>
+            }
+        }
+        @{
+            var ciderdrinks = Model.TappedStock.Where(a => a.TapType != "Conditioning" && a.Beer.BeerType == BeerType.Cider).ToList();
+        }
+        @if (ciderdrinks.Any())
+        {
+            <div class="page-header">
+                <h3 class="text-white m-2" style="display:inline-block;"><strong>Cider</strong></h3>
+            </div>
+
+            <div class="store-card-group productlist" id="productlist">
+                @foreach (var item in ciderdrinks)
+                {
+                    <div>
+                        <partial name="_ProductDisplay" model="new MonksInn.Web.Models.ProductDisplayViewModel { IsShort = true,  TappedStockItem = item, ShowStoreButtons = false , ShowTapTypeInsteadOfDeliveryOption = true }" />
+                    </div>
+                }
+            </div>
+        }
+
+        @{
+            var conditioningdrinks = Model.TappedStock.Where(a => a.TapType == "Conditioning").ToList();
+        }
+        @if (conditioningdrinks.Any())
+        {
+            <div class="page-header">
+                <h3 class="text-white m-2" style="display:inline-block;"><strong>Conditioning</strong></h3>
+            </div>
+            <div class="store-card-group productlist" id="productlist">
+                @foreach (var item in conditioningdrinks)
+                {
+                    <div>
+                        <partial name="_ProductDisplay" model="new MonksInn.Web.Models.ProductDisplayViewModel { IsShort = true,  TappedStockItem = item, ShowStoreButtons = false , ShowTapTypeInsteadOfDeliveryOption = true }" />
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+
+<div class="bg-primary" style=" color:white" id="AboutUs">
+    <div class="container">
+        <h2 class="text-center pt-4" style="color:white">About Us</h2>
+
+        <div class="pb-4" style="text-align:center;">
+            <div class="scroll" style="width:500px; max-width:90%; display:inline-block; height:350px; overflow-y:auto; vertical-align:middle;">
+                <p>
+                    My personal love for real ale began by accident at a CAMRA beer festival in St Albans. The concept of
+                    a micropub called Monks Inn was born in February 2018. The motivation stems from frustration
+                    truth be told. The lack of variety of quality cask beer in the established pubco or brewery pubs was
+                    the major driving factor. There are so many absolutely brilliant and skilled micro breweries around
+                    who still brew for love of beer. People who are passionate about what they do regardless of the fact
+                    that they don’t have umpteen pubs who are tied into them.
+                </p>
+                <p>
+                    Our affiliation to the real ale and cider industry began in grass roots rugby with legendary landlords
+                    by the names of Karen and Craig Douglas. They owned a little pub in London called The Bree Louise.
+                    Sporting 24 cask ales and 11 ciders, it’s easy to see why I was so spoilt with quality and choice. The
+                    Bree was my only stop off on way home to Watford Junction where I lived, and also coached mini
+                    rugby at Watford Rugby Club. I was most perturbed by the fact that Craig, being an ex Harlequins
+                    player, had no place to take his then 10 year old son. Watford being 17 minutes away was an easy
+                    invite. Next thing I know we are running an annual real ale festival to raise cash for this tiny club.
+                </p>
+                <p>
+                    Second thorn in the side was the flashing lights, questionable doof doof music (as I call it) and get
+                    drunk fast on cheap bilge culture. Inevitably an environment that invites xenophobia, racism, sexism,
+                    homophobia, intolerance as a whole. I was looking to emulate the ethos I found at the Bree with
+                    traditional roots. Drink beer the way monks invented it to be drunk. Serve it in the way it’s designed
+                    to be served. Uninterrupted, pure, blissful cask beer.
+                </p>
+                <p>
+                    Committing to a pubco or brewery pub with no experience was a definite no no. My personal
+                    opinion is, this is a major contributing factor to the massive closures of pubs in the country. It is so
+                    difficult for a publican to make a living when they are restricted and tied to the mainstream
+                    companies. And the reason you drink the same beer in every other pub. It was not good enough for
+                    me. So, motivated by my cousin and brother Desmond Whitaker, we converted an old Jennings
+                    Bookie, got the right licencing approvals and opened our doors on the 9 th November 2018.
+                </p>
+                <p>
+                    The pub was an immediate success with ‘Best Newcomer’ awarded to us by CAMRA after three
+                    months of trading. A year later we were awarded Best Pub by CAMRA Mid-Chiltern Branch and we
+                    are now in the Good Beer Guide. The 10 cask beers (five gravity and five handles), along with six still
+                    cider handles, a decent gin collection of around 30 gins was a big hit. There are no permanent beers
+                    on. We change it up every week and the selection is whimsical and random. It’s a beer festival every
+                    week. And everyone was welcome to our austere ‘monastery’. Bohemian hippies, gothic rockers,
+                    LGTBQ community, beer tickers and pensioners all converse and talk with each other. We champion
+                    charity causes with our neighbours The Salvation Army and we idolise the work our NHS Angels do.
+                    Policemen, Firemen and serving Armed Force members all enjoy special discounts, as does our
+                    pensioners and CAMRA members (outside of Covid Survival Mode). We have a tribe who call
+                    themselves ‘Monkonians’ and we are a family.
+                </p>
+                <p>
+                    80% of our beer is sourced within a 30 mile radius we do bring in beer and cider from all corners of
+                    our beautiful country. You will find our products are proudly British with a hint of South African. We
+                    have a decent wine selection with Rum starting to creep in as the next Gin fad.
+                </p>
+                <p>
+                    When permitted we hold very decent comedy and quiz nights with talented acoustic sessions on the
+                    weekend. Come and join our family. You will feel the love and serenity.
+                </p>
+            </div>
+            <div class="contactusimages" style="width:500px; max-width:90%; display:inline-block; vertical-align:middle;">
+                <div>
+                    <img src="~/images/aboutus/monks inn outside.jpg" />
+                </div>
+                <div>
+                    <img src="~/images/aboutus/all the beers.jpg" />
+                </div>
+                <div>
+                    <img src="~/images/aboutus/barstaff.jpg" />
+                </div>
+                <div>
+                    <img src="~/images/aboutus/packed monks.jpg" />
+                </div>
+                <div>
+                    <img src="~/images/aboutus/monkonians.jpg" />
+                </div>
+                <div>
+                    <img src="~/images/aboutus/the red monk.jpg" />
+                </div>
+                <div>
+                    <img src="~/images/aboutus/monkeys.jpg" />
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="bg-white" id="ContactUs">
+    <div class="container">
+        <h2 class="text-center pt-4">Contact Us</h2>
+        <div class="row">
+            <div class="col-md-7">
+                <dl class="row" style="font-size:1.2em;">
+
+                    <dt class="col-4 text-right">Number:</dt>
+                    <dd class="col-8"><a href="tel:07786365225">07786 365 225</a></dd>
+
+                    <dt class="col-4 text-right">Email:</dt>
+                    <dd class="col-8"><a href="mailto:enquiries@monksbuttery.co.uk">enquiries@monksbuttery.co.uk</a></dd>
+
+                    <dt class="col-4 text-right">Address:</dt>
+                    <dd class="col-8">
+                        @{
+                            var address = "31/32, The Square, Marlowes, Hemel Hempstead, HP1 1EP";
+                            var urlEncodedAddress = System.Net.WebUtility.UrlEncode(address);
+                            var addresswithbreakpoints = address.Replace(", ", "<br/>");
+                        }
+                        <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=@Html.Raw(urlEncodedAddress)">
+                            @Html.Raw(addresswithbreakpoints)
+                        </a>
+                    </dd>
+
+
+                </dl>
+            </div>
+            <div class="col-md-5">
+                <div id="ContactUsPartialContainer">
+                    <partial name="ContactUsPartial" model="null" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script src="~/lib/slick-carousel/slick.js"></script>
+    <script>
+        var contactUsForm = InitAjaxForm("#ContactUsPartialContainer", "/Home/ContactUsPartial", { InitOnReady: false });
+        $(document).ready(function () {
+            $('.contactusimages').slick({
+                dots: false,
+                infinite: true,
+                speed: 500,
+                fade: true,
+                cssEase: 'linear',
+                autoplay: true,
+                arrows: false,
+            });
+
+            $('.productlist').slick({
+                dots: true,
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                dotsClass: "slick-dots slick-dots-light",
+                speed: 300,
+                autoplay: true,
+                arrows: true,
+                responsive: [
+                    {
+                        breakpoint: 1400,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 3,
+
+                        }
+                    },
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2,
+
+                        }
+                    },
+                    {
+                        breakpoint: 740,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+
+                        }
+                    },
+                ]
+            });
+        });
+
+
+    </script>
+}
+

@@ -1,0 +1,40 @@
+﻿@model MonksInn.Web.Models.Profile.ApplyForWholesaleAccountPartialViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<div class="modal-header">
+    <h5>Apply for wholesale account</h5>
+</div>
+<dev class="modal-body">
+
+    @if (Model?.ApplicationSent == true)
+    {
+        <div class="alert alert-info">We have recieved your application and will contact you via email when it is proccessed.</div>
+        <div class="form-group text-right">
+                <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+        </div>
+    }
+    else
+    {
+        <form>
+            <div class="form-group">
+                <label asp-for="ComapanyName" class="control-label"></label>
+                <input asp-for="ComapanyName" class="form-control" />
+                <span asp-validation-for="ComapanyName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="VatNumber" class="control-label"></label>
+                <input asp-for="VatNumber" class="form-control" />
+                <span asp-validation-for="VatNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-right">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="button" data-dismiss="modal" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    }
+</dev>

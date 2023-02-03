@@ -1,0 +1,53 @@
+﻿@model MonksInn.Web.Models.Account.RegisterViewModel
+<div class="modal-header">
+    <h5 class="modal-title">Register</h5>
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true" class="fa fa-times-circle"></span>
+    </button>
+</div>
+<div class="modal-body">
+
+    @if (Model?.RegistrationSuccessful == true)
+    {
+        <h4>Registration complete.</h4>
+        <h5>An Email Confirmation link has been sent to your email address. Please follow the link activate your account.</h5>
+        <div>
+            <button onclick="LoginModal.open()" class="btn btn-primary  btn-block">Go back to log in</button>
+        </div>
+
+    }
+    else
+    {
+        <form>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" type="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ClearPassword" class="control-label"></label>
+                <input asp-for="ClearPassword" type="password" class="form-control" />
+                <span asp-validation-for="ClearPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary  btn-block">Register</button>
+                <button type="button" onclick="LoginModal.open()" class="btn btn-secondary  btn-block">Go back to log in</button>
+            </div>
+        </form>
+
+    }
+</div>

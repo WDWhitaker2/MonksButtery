@@ -1,0 +1,77 @@
+﻿@model MonksInn.Web.Models.Store.AddToCartViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal-header">
+    <h5 class="modal-title">Add to cart</h5>
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true" class="fa fa-times-circle"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <form>
+        @if (Model.IsCellarstock)
+        {
+            <div class="store-card-top" style="background-image:url('@Url.Action("GetThumbnail", "File", new { id=Model.CellarStockItem.Beer.ImageId })');">
+                <div class="store-card-top-text p-2">
+                    <p>The @Model.CellarStockItem.Beer.BeerName is a @Model.CellarStockItem.Beer.SubType @Model.CellarStockItem.Beer.BeerType.GetDisplayName().  </p>
+                    <p>@Model.CellarStockItem.Beer.Notes</p>
+
+                </div>
+            </div>
+            <div class="store-card-bottom">
+                <h4>@Model.CellarStockItem.Beer.BeerName <small class="text-muted">(@Model.CellarStockItem.Beer.Strength%)</small></h4>
+                <h6>by @Model.CellarStockItem.Beer.BreweryName</h6>
+                <h5>1x @Model.CellarStockItem.UnitSize</h5>
+            </div>
+
+            <h4>£ @Model.CellarStockItem.WholesalePrice</h4>
+            <input asp-for="StockUnits" type="hidden" value="1" />
+        }
+        else
+        {
+            <div class="store-card-top" style="background-image:url('@Url.Action("GetThumbnail", "File", new { id=Model.TappedStockItem.Beer.ImageId })');">
+                <div class="store-card-top-text p-2">
+                    <p>The @Model.TappedStockItem.Beer.BeerName is a @Model.TappedStockItem.Beer.SubType @Model.TappedStockItem.Beer.BeerType.GetDisplayName().  </p>
+                    <p>@Model.TappedStockItem.Beer.Notes</p>
+
+                </div>
+            </div>
+            <div class="store-card-bottom">
+                <h4>@Model.TappedStockItem.Beer.BeerName <small class="text-muted">(@Model.TappedStockItem.Beer.Strength%)</small></h4>
+                <h6>by @Model.TappedStockItem.Beer.BreweryName</h6>
+                <h5>on tap at the @Model.TappedStockItem.PubLocation.Name</h5>
+
+                @if (Model.TappedStockItem.ForDelivery && Model.TappedStockItem.ForTakeaway)
+                {
+                    <p><small>Available for Takeaway/Delivery</small></p>
+                }
+                else if (Model.TappedStockItem.ForTakeaway)
+                {
+                    <p><small>Available for Takeaway</small></p>
+                }
+                else if (Model.TappedStockItem.ForDelivery)
+                {
+                    <p><small>Available for Delivery</small></p>
+                }
+            </div>
+            <h4>£ @Model.TappedStockItem.RetailPrice</h4>
+            <div class="form-group">
+                <label>Quantity (Pints)</label>
+                <input asp-for="StockUnits" class="form-control" type="number" step="1" min="0" />
+            </div>
+        }
+
+        <input asp-for="StockItemId" type="hidden" />
+        <input asp-for="IsCellarstock" type="hidden" />
+        <input type="button" onclick="StoreLogic.SubmitAddToCart()" class="btn btn-primary btn-block" value="Add to cart" />
+    </form>
+
+</div>
+
+@if (Model.CloseModal)
+{
+    <script>
+        StoreLogic.CloseModalAndRefreshResults();
+    </script>
+}

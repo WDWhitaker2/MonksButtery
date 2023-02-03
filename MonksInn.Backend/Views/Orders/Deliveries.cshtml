@@ -1,0 +1,82 @@
+﻿@model MonksInn.Backend.Models.Order.OrderViewModel
+@{
+    ViewData["Title"] = "Deliveries";
+    ViewData["ActiveNav"] = "Deliveries";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    @*<div class="float-left form-inline">
+            <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+        </div>*@
+    @*<div class="float-right">
+        </div>*@
+
+</div>
+@if (Model.Orders.Any())
+{
+    @foreach (var group in Model.Orders.GroupBy(a => a.PubLocation))
+    {
+        <h5>@group.Key.Name</h5>
+
+        <div class="table-responsive" id="OrdersTablePartial">
+            <table class="table table-sm table-hover" id="OrdersTable">
+                <thead>
+                    <tr>
+                        <th class="pinch">Order Number</th>
+                        <th>Date Allocation</th>
+                        <th>Address</th>
+                        <th>items</th>
+                        <th class="pinch text-right">Total</th>
+                        <th class="pinch  text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in group)
+                    {
+                        <tr>
+                            <td class="pinch">@item.OrderNumber.BufferLength(6)</td>
+                            <td class="">@item.DeliveryDateAllocation.ToDisplayString()</td>
+                            <td class="pinch">
+                                <div>@item.StoreUser.Name</div>
+                                <div>@Html.Raw(@item.DeliveryAddress.ToAddressString(",<br>"))</div>
+                            </td>
+
+                            <td>
+                                @foreach (var orderitem in item.Items)
+                                {
+                                <div class="text-nowrap">@orderitem.TappedStockUnits pints of @orderitem.TappedStockItem.Beer.BeerName by @orderitem.TappedStockItem.Beer.BreweryName (@orderitem.TappedStockItem.TapType)</div>
+                                }
+                            </td>
+
+                            <td class="pinch text-right">£ @item.Total</td>
+                            <td class="pinch text-center">
+                                <a href="@Url.Action("MarkOrderDelivered", "Orders", new { id= item.Id })" class="btn btn-outline-primary btn-sm ">Mark as Delivered</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">
+        There are no orders to deliver.
+    </div>
+}
+
+
+
+
+
+
+@section Scripts{
+
+    <script>
+
+    </script>
+}

@@ -1,0 +1,51 @@
+﻿@model MonksInn.Backend.Models.Cellar.TapBeerViewModel
+
+<form onsubmit="SubmitTapBeer(event)">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    @Html.HiddenFor(a => a.CellarStockItemId)
+
+    <div class="form-group">
+        <label asp-for="PubLocationId" class="control-label"></label>
+        <select asp-for="PubLocationId" class="form-control">
+            <option></option>
+            @foreach (var item in Model.PubLocationList)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+        <span asp-validation-for="PubLocationId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TapType" class="control-label"></label>
+        <select asp-for="TapType" class="form-control">
+            <option></option>
+            @foreach (var item in Model.TapTypeList)
+            {
+                <option>@item</option>
+            }
+        </select>
+        <span asp-validation-for="TapType" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-sm btn-outline-primary">Tap</button>
+        <button type="button" data-dismiss="modal" class="btn btn-sm btn-outline-primary">Close</button>
+    </div>
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        $("#TapType").select2({
+        });
+    });
+</script>
+
+@if (Model.ForceCloseModal)
+{
+    <script>
+        $(".modal").modal("hide");
+    </script>
+}

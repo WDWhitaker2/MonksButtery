@@ -1,0 +1,52 @@
+﻿@model MonksInn.Backend.Models.DeliverySlot.DeliverySlotViewModel
+
+@{
+    ViewData["Title"] = "Delivery Slots";
+    ViewData["ActiveNav"] = "Delivery Slots";
+}
+
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanAddUpdateDeliverySlots))
+        {
+            <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Add", "DeliverySlot")">Add Slot</a>
+        }
+    </div>
+
+</div>
+
+<div class="table-responsive" >
+    <table class="table table-sm table-hover" id="PubLocationTable">
+        <thead>
+            <tr>
+                <th class="">Day</th>
+                <th class="">Time</th>
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.DeliverySlots)
+            {
+
+                <tr>
+                    <td>@item.DayOfWeek.ToString()</td>
+                    <td>@item.StartTime.ToTimeFormat() - @item.EndTime.ToTimeFormat()</td>
+                    <td class="text-right pinch ignorefilter">
+                        @if (User.HasAccess(SystemPermission.CanAddUpdateDeliverySlots))
+                        {
+                            <a class="btn btn-xs btn-outline-primary" href="@Url.Action("Update", new { id= item.Id })">Update</a>
+                        }
+                        @if (User.HasAccess(SystemPermission.CanArchiveDeliverySlots))
+                        {
+                            <a class="btn btn-xs btn-outline-danger" href="#" onclick="ConfirmDelete('@Url.Action("Archive", "DeliverySlot", new { id = item.Id })', '@item.DayOfWeek.ToString() @item.StartTime - @item.EndTime')">Archive</a>
+                        }
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

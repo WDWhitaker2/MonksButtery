@@ -1,0 +1,34 @@
+﻿@model MonksInn.Web.Models.Home.ContactUsPartialViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (Model?.SentSuccessfully == true)
+{
+    <div class="alert alert-success">We have recieved your message, now go on and have a beertastic day!</div>
+}
+else
+{
+
+    <form>
+        <div class="form-group form-group">
+            <label>Name</label>
+            @Html.TextBoxFor(a => a.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(a => a.Name, null, new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            @Html.TextBoxFor(a => a.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(a => a.Email, null, new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Message</label>
+            @Html.TextAreaFor(a => a.Message, 4, 1, new { @class = "form-control" })
+            @Html.ValidationMessageFor(a => a.Message, null, new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+
+    </form>
+}

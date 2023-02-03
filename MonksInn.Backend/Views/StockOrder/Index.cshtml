@@ -1,0 +1,151 @@
+﻿@model MonksInn.Backend.Models.StockOrder.StockOrdersViewModel
+@{
+    ViewData["Title"] = "Stock Orders";
+    ViewData["ActiveNav"] = "Stock Orders";
+}
+
+
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="SearchOrders" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanOrderStock))
+        {
+            <a class="btn btn-sm btn-primary mr-2" onclick="ShowOrderStockModal()">Order Stock</a>
+        }
+    </div>
+
+</div>
+<div class="table-responsive" id="StockOrderTablePartial">
+    <partial name="StockOrderTablePartial" for="@Model" />
+</div>
+
+
+@section Scripts{
+
+    <script>
+        var tablepartialurl = "@Url.Action("StockOrderTablePartial", "StockOrder")";
+
+        function RefreshTable() {
+            PageSpinner.toggle(true);
+            $('[data-toggle="tooltip"]').tooltip('dispose');
+
+            $.get(tablepartialurl, function (data) {
+                $("#StockOrderTablePartial").html(data);
+                InitFilterTable("#SearchOrders", "#StockOrderTable tbody");
+                PageSpinner.toggle(false);
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
+        }
+
+        $(document).ready(function () {
+            InitFilterTable("#SearchOrders", "#StockOrderTable tbody");
+
+            $(".modal").on('hidden.bs.modal', function () {
+                RefreshTable();
+            });
+
+        });
+    </script>
+
+    @if (User.HasAccess(SystemPermission.CanOrderStock))
+    {
+        <div class="modal" id="OrderStockModal" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Order Stock</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true" class="fa fa-times-circle"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="OrderStockModalContent">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+
+        var orderstockurl = "@Url.Action("OrderStockPartial", "StockOrder")";
+        function ShowOrderStockModal() {
+            PageSpinner.toggle(true);
+            $("#OrderStockModalContent").load(orderstockurl, function (data) {
+                $("#OrderStockModal").modal("show");
+                PageSpinner.toggle(false);
+            });
+        }
+
+        function SubmitStockOrder(e) {
+            e.preventDefault();
+
+            PageSpinner.toggle(true);
+            var formData = $("#OrderStockModalContent form").serializeArray();
+
+            $.ajax({
+                url: orderstockurl,
+                method: 'post',
+                data: formData,
+                complete: function (data) {
+                    $("#OrderStockModalContent").html(data.responseText);
+                    PageSpinner.toggle(false);
+                }
+            });
+            return false;
+        }
+
+        </script>
+    }
+    @if (User.HasAccess(SystemPermission.CanRecieveStock))
+    {
+
+        <div class="modal" id="ReceiveStockModal" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Receive Stock</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true" class="fa fa-times-circle"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="ReceiveStockModalContent">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        var receivestockurl = "@Url.Action("ReceiveStockPartial", "StockOrder")";
+        function ShowReceiveStockModal(id) {
+            PageSpinner.toggle(true);
+            $("#ReceiveStockModalContent").load(`${receivestockurl}/${id}`, function (data) {
+                $("#ReceiveStockModal").modal("show");
+                PageSpinner.toggle(false);
+            });
+        }
+        function SubmitReceiveOrder(e) {
+            e.preventDefault();
+
+            PageSpinner.toggle(true);
+            var formData = $("#ReceiveStockModalContent form").serializeArray();
+
+            $.ajax({
+                url: receivestockurl,
+                method: 'post',
+                data: formData,
+                complete: function (data) {
+                    $("#ReceiveStockModalContent").html(data.responseText);
+                    PageSpinner.toggle(false);
+                }
+            });
+            return false;
+        }
+        </script>
+    }
+}

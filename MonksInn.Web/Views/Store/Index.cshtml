@@ -1,0 +1,138 @@
+﻿@model MonksInn.Web.Models.Store.FilterViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="dark-container">
+    <div class="container-fluid mt-4" id="tableResultsPartial">
+        <div class="jumbotron text-center">
+            <h2>Our online store is coming soon!</h2>
+            <a class="btn btn-primary" href="/Home">Go back to Homepage</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+@*@section Scripts{
+        <div class="modal" id="filterModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <partial name="FilterFormPartial" model="Model" />
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="cartModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="addToCartModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            var StoreLogic = (function () {
+
+                var ResultsPartial = InitAjaxPartial("#tableResultsPartial", "@(Url.Action("ResultsPartial","Store"))");
+                var FitlerModal = InitAjaxModal("#filterModal", "@(Url.Action("FilterFormPartial", "Store"))", { onsubmitcomplete: function () { CloseModalAndRefreshResults(); }, refreshOnPost:true});
+
+                var AddToCartModal = InitAjaxModal("#addToCartModal", "@Url.Action("AddToCart", "Store")");
+
+                var CartModal = InitAjaxModal("#cartModal", "@Url.Action("Cart", "Store")");
+
+                function RefreshResults() {
+                    var filterform = $.param(FitlerModal.getFormData());
+                    ResultsPartial.refresh({ formdata: filterform })
+
+                }
+
+                function CloseModalAndRefreshResults() {
+                    $(".modal").modal("hide");
+                    RefreshResults();
+                }
+
+                function AddToFavorites(selector) {
+                    var beerId = $(selector).data("beerid");
+                    if ($(selector).hasClass('liked')) {
+                        $(selector).removeClass('liked');
+                        $.get(`/Store/RemoveLikedBeer?beerId=${beerId}`, function (data) {
+                        });
+                    } else {
+                        $(selector).addClass('liked');
+                        $.get(`/Store/AddLikedBeer?beerId=${beerId}`, function (data) {
+                        });
+                    }
+                }
+
+
+                function OpenFilterModal() {
+                    FitlerModal.open();
+                }
+
+                function SubmitFitler() {
+                    FitlerModal.submit();
+                }
+
+                function ClearFitler() {
+                    FitlerModal.reset();
+                }
+
+                function OpenAddToCartModal(parameters) {
+                    AddToCartModal.open(parameters);
+                }
+
+                function SubmitAddToCart() {
+                    AddToCartModal.submit();
+                }
+
+                function OpenCartModal() {
+                    CartModal.open();
+                }
+
+                function RemoveFromCart(id) {
+                    $.post("@Url.Action("RemoveFromCart", "Store")", { id: id }, function () {
+                        CartModal.open();
+                        RefreshResults();
+                    });
+                }
+
+                function DoInitialLoad() {
+                    RefreshResults();
+                }
+
+                return {
+                    AddToFavorites,
+
+                    OpenFilterModal,
+                    SubmitFitler,
+                    ClearFitler,
+
+                    OpenAddToCartModal,
+                    SubmitAddToCart,
+                    OpenCartModal,
+                    RemoveFromCart,
+
+                    DoInitialLoad,
+                    CloseModalAndRefreshResults,
+                }
+
+
+            })();
+
+
+            $(document).ready(function () {
+                StoreLogic.DoInitialLoad();
+            });
+        </script>
+
+
+    }*@

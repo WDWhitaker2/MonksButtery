@@ -1,0 +1,111 @@
+﻿
+$navbar-brand-left-padding: 66px;
+
+.navbar-brand.has-logo {
+    padding-left: $navbar-brand-left-padding;
+
+    .navbar-brand-logo {
+        position: absolute;
+        height: 70px;
+        width: auto;
+        top: 50%;
+        margin-top: -35px;
+        margin-left: -$navbar-brand-left-padding;
+    }
+}
+
+.full-page-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 2000;
+    padding-top: 40vh;
+    color: white;
+    /*font-size: 4rem;*/
+    text-align: center;
+    display: none;
+
+    &.in {
+        display: block;
+    }
+}
+
+a:hover {
+    color: $indigo;
+    text-decoration: underline;
+}
+
+a {
+    color: $purple;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+
+.btn.btn-xs {
+    font-size: 10px;
+    line-height: 10px;
+    padding: 6px 10px;
+}
+
+td.pinch,
+th.pinch {
+    width: 1%;
+    white-space: nowrap;
+}
+
+td.force-ellipsis {
+    width: 100%;
+    position: relative;
+}
+
+td.force-ellipsis:not(:empty)::after {
+    /* Prevent row from collapsing vertically if the first column is empty */
+    content: '';
+    display: inline-block;
+}
+
+td.force-ellipsis > span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.alert-container {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    top: 40px;
+    left: 0;
+    right: 0;
+    width: 500px;
+    max-width: 100%;
+    z-index: 2000;
+
+
+    * {
+        margin: 15px;
+    }
+}
+
+.alert-container {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    top: 40px;
+    left: 0;
+    right: 0;
+    width: 500px;
+    max-width: 100%;
+    z-index: 2000;
+
+
+    * {
+        margin: 15px;
+    }
+}

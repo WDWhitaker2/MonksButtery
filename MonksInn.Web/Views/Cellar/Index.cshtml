@@ -1,0 +1,29 @@
+﻿@model MonksInn.Web.Models.Cellar.IndexViewModel
+
+@{
+    ViewData["Title"] = "What's in the Cellar";
+}
+
+<div class="text-center dark-container" style="padding-left:30px; padding-right:30px;">
+    <div class="container-fluid">
+        <h1 class="text-white m-2 pt-4">What's in the Cellar</h1>
+
+        <div class="store-card-group" id="productlist">
+
+            @foreach (var group in Model.CellarStock.GroupBy(a => a.Beer.BeerType))
+            {
+                <div class="page-header">
+                    <h3 class="text-white m-2" style="display:inline-block;"><strong>@group.Key</strong></h3>
+                </div>
+
+                @foreach (var groupeditem in group.GroupBy(a => new { a.Beer, a.UnitSize, a.WholesalePrice }).OrderBy(a => a.Key.Beer.BeerName).ThenBy(a => a.Key.UnitSize).ToList())
+                {
+                    var first = groupeditem.FirstOrDefault();
+                    <partial name="_ProductDisplay" model="new MonksInn.Web.Models.ProductDisplayViewModel { CellarStockItem = first, ShowStoreButtons = false , ShowTapTypeInsteadOfDeliveryOption = true }" />
+                }
+            }
+
+
+        </div>
+    </div>
+</div>

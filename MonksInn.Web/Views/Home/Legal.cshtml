@@ -1,0 +1,32 @@
+﻿@model MonksInn.Web.Models.Home.LegalViewModel
+@{
+    ViewData["Title"] = "Legal";
+}
+
+
+<div class="container">
+    <div class="card mt-4" id="TermsAndConditions">
+        <div class="card-header">
+            <h3 class="card-title">Terms and Conditions</h3>
+        </div>
+        <div class="card-body">
+            @Html.Raw(Model.TermsAndConditions)
+        </div>
+    </div>
+    <div class="card mt-4" id="PrivacyPolicy">
+        <div class="card-header">
+            <h3 class="card-title">Privacy Policy</h3>
+        </div>
+        <div class="card-body">
+            @Html.Raw(Model.PrivacyPolicy)
+        </div>
+    </div>
+    <div class="card mt-4" id="CookiePolicy">
+        <div class="card-header">
+            <h3 class="card-title">Cookie Policy</h3>
+        </div>
+        <div class="card-body">
+            @Html.Raw(Model.CookiePolicy)
+        </div>
+    </div>
+</div>

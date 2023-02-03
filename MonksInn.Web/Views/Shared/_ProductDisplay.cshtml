@@ -1,0 +1,126 @@
+﻿@model MonksInn.Web.Models.ProductDisplayViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (Model.CellarStockItem != null)
+{
+    <div class="store-card m-2">
+        <div class="store-card-top" style="background-image:url('@Url.Action("GetThumbnail", "File", new { id=Model.CellarStockItem.Beer.ImageId })');">
+            <div class="store-card-top-text p-2">
+                <p>The @Model.CellarStockItem.Beer.BeerName is a @Model.CellarStockItem.Beer.SubType @Model.CellarStockItem.Beer.BeerType.GetDisplayName().  </p>
+                <p>@Model.CellarStockItem.Beer.Notes</p>
+
+            </div>
+        </div>
+        <div class="store-card-bottom">
+            <h4>@Model.CellarStockItem.Beer.BeerName <small class="text-muted">(@Model.CellarStockItem.Beer.Strength%)</small></h4>
+            <h6>by @Model.CellarStockItem.Beer.BreweryName</h6>
+            <h5>
+                <span class="border p-1 d-inline-block">@Model.CellarStockItem.UnitSize</span>
+            </h5>
+        </div>
+        <div class="store-price"> £ @Model.CellarStockItem.WholesalePrice</div>
+        @if (Model.ShowStoreButtons)
+        {
+            <div class="store-btn-group">
+                @{
+
+                    var addtocartscript = $"StoreLogic.OpenAddToCartModal({{ getParameters: {{id:'{Model.CellarStockItem.Id}',isCellarstock:true}}}})";
+
+                    var addtofavoritesscript = "StoreLogic.AddToFavorites(this)";
+                    if (ViewBag.PrivacyCookieValue != true)
+                    {
+                        addtocartscript = "privacyModal.open()";
+                        addtofavoritesscript = "privacyModal.open()";
+                    }
+
+                }
+                <span class="mi mi-add-shopping-cart fa-fw store-btn text-purple" onclick="@addtocartscript"></span>
+                @if (User.IsAuthenticated())
+                {
+                    var liked = Model.ProductIsLiked ? "liked" : "";
+                    <span data-beerid="@Model.CellarStockItem.Beer.Id" onclick="@addtofavoritesscript" class="mi btn-heart store-btn text-danger @liked"></span>
+                }
+                else
+                {
+                    <span data-beerid="@Model.CellarStockItem.Beer.Id" onclick="AddAlert('You need to be logged in to like a beer.', 'info')" class="mi btn-heart store-btn text-danger"></span>
+                }
+
+            </div>
+        }
+
+    </div>
+}
+else if (Model.TappedStockItem != null)
+{
+    var shorttext = Model.IsShort ? "store-card-short" : "";
+    <div class="store-card m-2 @shorttext">
+        <div class="store-card-top" style="background-image:url('@Url.Action("GetThumbnail", "File", new { id=Model.TappedStockItem.Beer.ImageId })');">
+            <div class="store-card-top-text p-2">
+                <p>The @Model.TappedStockItem.Beer.BeerName is a @Model.TappedStockItem.Beer.SubType @Model.TappedStockItem.Beer.BeerType.GetDisplayName().  </p>
+                <p>@Model.TappedStockItem.Beer.Notes</p>
+
+            </div>
+        </div>
+        <div class="store-card-bottom">
+            <h4>@Model.TappedStockItem.Beer.BeerName <small class="text-muted">(@Model.TappedStockItem.Beer.Strength%)</small></h4>
+            <h6>by @Model.TappedStockItem.Beer.BreweryName</h6>
+            @if (Model.ShowTapTypeInsteadOfDeliveryOption)
+            {
+                if (Model.TappedStockItem.TapType == "Conditioning")
+                {
+                    <p><small>@Model.TappedStockItem.TapType</small></p>
+                }
+                else
+                {
+                    <p><small>Available on @Model.TappedStockItem.TapType</small></p>
+                }
+            }
+            else
+            {
+                <h5>on tap at the @Model.TappedStockItem.PubLocation.Name</h5>
+                @if (Model.TappedStockItem.ForDelivery && Model.TappedStockItem.ForTakeaway)
+                {
+                    <p><small>Available for Takeaway/Delivery</small></p>
+                }
+                else if (Model.TappedStockItem.ForTakeaway)
+                {
+                    <p><small>Available for Takeaway</small></p>
+                }
+                else if (Model.TappedStockItem.ForDelivery)
+                {
+                    <p><small>Available for Delivery</small></p>
+                }
+            }
+        </div>
+        <div class="store-price">£ @Model.TappedStockItem.RetailPrice</div>
+        @if (Model.ShowStoreButtons)
+        {
+            <div class="store-btn-group">
+                @{
+                    var addtocartscript = $"StoreLogic.OpenAddToCartModal({{ getParameters: {{id:'{Model.TappedStockItem.Id}',isCellarstock:false}}}})";
+                    var addtofavoritesscript = "StoreLogic.AddToFavorites(this)";
+                    if (ViewBag.PrivacyCookieValue != true)
+                    {
+                        addtocartscript = "privacyModal.open()";
+                        addtofavoritesscript = "privacyModal.open()";
+                    }
+
+                }
+                <span class="mi mi-add-shopping-cart fa-fw store-btn text-purple" onclick="@addtocartscript"></span>
+                @if (User.IsAuthenticated())
+                {
+                    var liked = Model.ProductIsLiked ? "liked" : "";
+                    <span data-beerid="@Model.TappedStockItem.BeerId" onclick="@addtofavoritesscript" class="mi btn-heart store-btn text-danger @liked"></span>
+                }
+                else
+                {
+                    <span data-beerid="@Model.TappedStockItem.BeerId" onclick="AddAlert('You need to be logged in to like a beer.', 'info')" class="mi btn-heart store-btn text-danger"></span>
+                }
+
+            </div>
+        }
+
+    </div>
+}

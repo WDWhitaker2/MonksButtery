@@ -1,0 +1,45 @@
+﻿@model MonksInn.Backend.Models.WholesaleApplication.RespondPartialViewModel
+@{
+    ViewData["Title"] = "View Wholesale Application";
+    ViewData["ActiveNav"] = "Wholesale Application";
+}
+
+
+
+
+<div class="row">
+    <div class="col-lg-4">
+        <form action="@Url.Action()" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input type="text" asp-for="UserName" class="form-control" readonly />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CompanyName" class="control-label"></label>
+                <input type="text" asp-for="CompanyName" class="form-control" readonly />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="VatNumber" class="control-label"></label>
+                <input type="text" asp-for="VatNumber" class="form-control" readonly />
+                <span asp-validation-for="VatNumber" class="text-danger"></span>
+            </div>
+
+            <div class="text-right">
+                <button type="submit" name="Result" value="true" class="btn btn-sm btn-outline-success">Accept</button>
+                <button type="submit" name="Result" value="false" class="btn btn-sm btn-outline-danger">Reject</button>
+                <a data-dismiss="modal" class="btn btn-sm btn-outline-primary" href="@Url.Action("Index", "WholesaleApplication")">Back</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+

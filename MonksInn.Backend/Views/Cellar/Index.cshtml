@@ -1,0 +1,175 @@
+﻿@model MonksInn.Backend.Models.Cellar.CellarViewModel
+@{
+    ViewData["Title"] = "Cellar Stock";
+    ViewData["ActiveNav"] = "Cellar Stock";
+}
+
+
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="SearchCellar" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanManualAddCellarStock))
+        {
+            <a class="btn btn-sm btn-primary mr-2" onclick="AddStockModal.open()">Add Stock</a>
+        }
+    </div>
+
+</div>
+<div class="table-responsive" id="CellarTablePartial">
+    <partial name="CellarTablePartial" model="@Model" />
+</div>
+
+
+@section Scripts{
+    <script>
+        var tablepartialurl = "@Url.Action("CellarTablePartial", "Cellar")";
+
+        function RefreshTable() {
+            PageSpinner.toggle(true);
+            $('[data-toggle="tooltip"]').tooltip('dispose');
+            $.get(tablepartialurl, function (data) {
+                $("#CellarTablePartial").html(data);
+                InitFilterTable("#SearchCellar", "#CellarTable tbody");
+                PageSpinner.toggle(false);
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
+        }
+
+        $(document).ready(function () {
+            InitFilterTable("#SearchCellar", "#CellarTable tbody");
+
+            $(".modal").on('hidden.bs.modal', function () {
+                RefreshTable();
+            });
+        });
+    </script>
+
+
+
+    @if (User.HasAccess(SystemPermission.CanTapCellarStock))
+    {
+        <div class="modal" id="TapBeerModal" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Receive Stock</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true" class="fa fa-times-circle"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="TapBeerModalContent">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        var TapBeerurl = "@Url.Action("TapBeerPartial", "Cellar")";
+        function ShowTapBeerModal(id) {
+            PageSpinner.toggle(true);
+            $("#TapBeerModalContent").load(`${TapBeerurl}/${id}`, function (data) {
+                $("#TapBeerModal").modal("show");
+                PageSpinner.toggle(false);
+            });
+        }
+        function SubmitTapBeer(e) {
+            e.preventDefault();
+
+            PageSpinner.toggle(true);
+            var formData = $("#TapBeerModalContent form").serializeArray();
+
+            $.ajax({
+                url: TapBeerurl,
+                method: 'post',
+                data: formData,
+                complete: function (data) {
+                    $("#TapBeerModalContent").html(data.responseText);
+                    PageSpinner.toggle(false);
+                }
+            });
+            return false;
+        }
+        </script>
+    }
+
+    @if (User.HasAccess(SystemPermission.CanUpdateCellarStock))
+    {
+        <div class="modal" id="UpdateStockPartial" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                </div>
+            </div>
+        </div>
+        <script>
+            var UpdateStockModal = InitAjaxModal("#UpdateStockPartial","@Url.Action("UpdateStockPartial", "Cellar")");
+        </script>
+    }
+
+
+    @if (User.HasAccess(SystemPermission.CanManualAddCellarStock))
+    {
+        <div class="modal" id="AddStockPartial" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                </div>
+            </div>
+        </div>
+        <script>
+            var AddStockModal = InitAjaxModal("#AddStockPartial","@Url.Action("AddStockPartial", "Cellar")");
+        </script>
+    }
+    @if (User.HasAccess(SystemPermission.CanArchiveCellarStock))
+    {
+        <div class="modal" id="RemoveStockModal" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Archive Stock</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true" class="fa fa-times-circle"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="RemoveStockModalContent">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        var RemoveStockurl = "@Url.Action("RemoveStockPartial", "Cellar")";
+        function ShowRemoveStockModal(id) {
+            PageSpinner.toggle(true);
+            $("#RemoveStockModalContent").load(`${RemoveStockurl}/${id}`, function (data) {
+                $("#RemoveStockModal").modal("show");
+                PageSpinner.toggle(false);
+            });
+        }
+        function SubmitRemoveStock(e) {
+            e.preventDefault();
+
+            PageSpinner.toggle(true);
+            var formData = $("#RemoveStockModalContent form").serializeArray();
+
+            $.ajax({
+                url: RemoveStockurl,
+                method: 'post',
+                data: formData,
+                complete: function (data) {
+                    $("#RemoveStockModalContent").html(data.responseText);
+                    PageSpinner.toggle(false);
+                }
+            });
+            return false;
+        }
+        </script>
+    }
+}

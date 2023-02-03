@@ -1,0 +1,34 @@
+﻿
+@if (ViewBag.FormSubmitted == true)
+{
+    <script>
+        location.reload();
+    </script>
+}
+else
+{
+    <div class="modal-header"><h5 class="modal-title">Our use of cookies</h5></div>
+    <div class="modal-body">
+        <p>
+            We use necessary cookies to make our site work. 
+            Using this tool will set a cookie on your device to remember your preferences.
+        </p>
+        <p>
+            Necessary cookies enable core functionality such as security and accessibility. 
+            You may disable these by changing your browser settings, but this may affect how the website functions.
+        </p>
+        <p>For more detailed information about the cookies we use, see our <a href="@Url.Action("Cookies", "Home")">Cookies page <span class="fa fa-external-link-square"></span></a>.</p>
+        <form class="text-right" id="AcceptPrivacyCookieForm">
+            <input type="hidden" name="AcceptPrivacyCookie" id="AcceptPrivacyCookie" value="false" />
+            <button class="btn btn-danger" type="button" onclick="SetAcceptPrivacyCookie(false)">Reject</button>
+            <button class="btn btn-success" type="button" onclick="SetAcceptPrivacyCookie(true)">Accept</button>
+        </form>
+    </div>
+}
+
+<script>
+    function SetAcceptPrivacyCookie(value) {
+        $("#AcceptPrivacyCookie").val(value);
+        $("#AcceptPrivacyCookieForm").submit();
+    }
+</script>

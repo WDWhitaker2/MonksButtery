@@ -1,0 +1,223 @@
+﻿@model MonksInn.Backend.Models.Cellar.UpdateStockPartialViewModel
+<div class="modal-header">
+    <h5 class="modal-title">@(Model.IsAddView ? "Add" : "Update") Stock</h5>
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true" class="fa fa-times-circle"></span>
+    </button>
+</div>
+<div class="modal-body">
+    <div>
+
+        <form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" class="form-control" />
+            @if (Model.IsAddView)
+            {
+
+                <div class="form-group">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" onchange="ToggleAddNewBeer()" name="AddNewBeer" id="AddNewBeer" type="checkbox" value="true" @(Model.AddNewBeer ? "checked" : "") /> Create New Beer
+                        </label>
+                    </div>
+                </div>
+                <hr />
+
+                <div id="AddNewBeerContainer" style="@(Model.AddNewBeer ? "" : "Display:none")">
+                    <div class="form-group">
+                        <label asp-for="BreweryName" class="control-label"></label>
+                        <div>
+                            <select asp-for="BreweryName" class="form-control">
+                                <option></option>
+                                @foreach (var item in Model.CurrentBreweries.OrderBy(a => a))
+                                {
+                                    <option>@item</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="BreweryName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="BeerName" class="control-label"></label>
+                        <input asp-for="BeerName" class="form-control" />
+                        <span asp-validation-for="BeerName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Strength" class="control-label"></label>
+                        <input asp-for="Strength" type="number" step="0.01" min="0" class="form-control" />
+                        <span asp-validation-for="Strength" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="BeerType" type="radio" value="@BeerType.Ale" /> Ale
+                            </label>
+                        </div>
+                        <div class=" form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="BeerType" type="radio" value="@BeerType.Cider" /> Cider
+                            </label>
+                        </div>
+                        <div class=" form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="BeerType" type="radio" value="@BeerType.Lager" /> Lager
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SubType" class="control-label"></label>
+                        <div>
+                            <select asp-for="SubType" class="form-control">
+                                <option></option>
+                                @foreach (var item in Model.CurrentTypes.OrderBy(a => a))
+                                {
+                                    <option>@item</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="SubType" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea rows="5" asp-for="Notes" class="form-control"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                </div>
+            }
+
+            <div id="AddExistingBeerContainer" style="@(!Model.AddNewBeer ? "" : "Display:none")">
+                <div class="form-group">
+                    @if (Model.IsAddView)
+                    {
+                        <label asp-for="Beer" class="control-label"></label>
+                        <select asp-for="BeerId" class="form-control">
+                            <option></option>
+                            @foreach (var item in Model.CurrentBeers)
+                            {
+                                <option value="@item.Id">@item.BreweryName - @item.BeerName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="BeerId" class="text-danger"></span>
+                    }
+                    else
+                    {
+
+                        <label asp-for="Beer" class="control-label"></label>
+                        <input asp-for="Beer" class="form-control" readonly />
+                        <span asp-validation-for="Beer" class="text-danger"></span>
+                    }
+                </div>
+            </div>
+            <hr />
+
+
+
+            <div class="form-group">
+                <label asp-for="UnitSize" class="control-label"></label>
+                <select asp-for="UnitSize" class="form-control">
+                    <option></option>
+                    @foreach (var item in Model.UnitSizeList)
+                    {
+                        <option>@item</option>
+                    }
+                </select>
+                <span asp-validation-for="UnitSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SellByDate" class="control-label"></label>
+                <input asp-for="SellByDate" type="date" class="form-control" />
+                <span asp-validation-for="SellByDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CostPrice" class="control-label"></label>
+                <input asp-for="CostPrice" type="number" step="0.01" min="0" class="form-control" />
+                <span asp-validation-for="CostPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WholesalePrice" class="control-label"></label>
+                <input asp-for="WholesalePrice" type="number" step="0.01" min="0" class="form-control" />
+                <span asp-validation-for="WholesalePrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-sm btn-outline-primary">@(Model.IsAddView ? "Add" : "Update")</button>
+                <button type="button" data-dismiss="modal" class="btn btn-sm btn-outline-primary">Close</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+@if (Model.ForceCloseModal)
+{
+    <script>
+            AddAlert("Cellar stock successfully @(Model.IsAddView ? "Added" : "Updated").");
+            $(".modal").modal("hide");
+
+        $(document).ready(function () {
+            $("#BeerId").select2({
+            });
+        });
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#BeerId").select2();
+        $("#CostPrice").on("change", function () {
+            UpdateWholesalePrice();
+        });
+        $("#UnitSize").on("change", function () {
+            UpdateWholesalePrice();
+        });
+    });
+
+    function UpdateWholesalePrice() {
+        var _WholesalePriceInput = $("#WholesalePrice");
+
+        var _UnitSizeInput = $("#UnitSize");
+        var _CostPriceInput = $("#CostPrice");
+
+        var formdata = {
+            UnitSize: _UnitSizeInput.val(),
+            Price: _CostPriceInput.val(),
+        };
+
+        $.post("@Url.Action("GetWholesalePrice", "Cellar")", formdata, function (data) {
+            _WholesalePriceInput.val(data);
+        });
+
+
+    }
+</script>
+
+@if (Model.IsAddView)
+{
+    <script>
+        $("#BreweryName").select2({
+            tags: true
+        });
+
+        $("#SubType").select2({
+            tags: true
+        });
+        function ToggleAddNewBeer() {
+            var check = $("#AddNewBeer").is(':checked');
+
+            if (check) {
+                $("#AddExistingBeerContainer").hide();
+                $("#AddNewBeerContainer").show();
+            }
+            else {
+                $("#AddNewBeerContainer").hide();
+                $("#AddExistingBeerContainer").show();
+            }
+        }
+    </script>
+}

@@ -1,0 +1,75 @@
+﻿@model MonksInn.Backend.Models.Bookings.IndexViewModel
+@{
+    ViewData["Title"] = "Bookings";
+    ViewData["ActiveNav"] = "Bookings";
+}
+
+
+@section ContextButtons{
+}
+<div class=" clearfix mb-2">
+    <div class="float-left form-inline">
+        <input type="text" id="Search" class="form-control form-control-sm  mr-2" placeholder="Search" />
+    </div>
+    <div class="float-right">
+        @if (User.HasAccess(SystemPermission.CanAddUpdateBooking))
+        {
+            <a class="btn btn-sm btn-primary mr-2" href="@Url.Action("Add", "Booking")">Add Booking</a>
+        }
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover" id="BookingsTable" style="white-space:nowrap;">
+        <thead>
+            <tr>
+                <th class="pinch">Status</th>
+                <th class="pinch">Date</th>
+                <th class="pinch">Time</th>
+                <th class="pinch">Full Name</th>
+                <th class="pinch">Occasion</th>
+                <th class="pinch">Number Of Guests</th>
+
+
+                <th class="text-center pinch">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BookingsList)
+            {
+            <tr>
+                <td>@(item.DepositPaid ? $"PAID ({item.DepositPaidBy})" : "")</td>
+                <td>@item.DateOfBooking.ToShortDateString()</td>
+                <td>@item.StartTime.ToTimeFormat() - @item.EndTime.ToTimeFormat()</td>
+                <td>@item.FullName</td>
+                <td>@item.Occasion</td>
+                <td>@item.NumberOfGuests</td>
+                
+                
+                <td class="text-center pinch ignorefilter">
+                    @if (User.HasAccess(SystemPermission.CanAddUpdateBooking))
+                    {
+                        <a class="btn btn-xs btn-outline-primary" href="@Url.Action("Update", new { id= item.Id })">Update</a>
+                    }
+                    @if (User.HasAccess(SystemPermission.CanArchiveBooking))
+                    {
+                        <a class="btn btn-xs btn-outline-danger" href="#" onclick="ConfirmDelete('@Url.Action("Archive", "Booking", new { id = item.Id })', 'booking @item.FullName on @item.DateOfBooking.ToShortDateString() ')">Archive</a>
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts{
+    <script>
+        InitFilterTable("#Search", "#BookingsTable tbody");
+    </script>
+    <script>
+            var Table = InitAjaxModal("#ConfirmStockPartial", "@Url.Action("ConfirmStockPartial", "Booking")", { onclose: });
+    </script>
+
+}
